@@ -75,7 +75,9 @@
     s.profiles = s.profiles || {};
     const user = keepUser && s.profiles[name] ? repair(Object.assign({}, s.profiles[name])) : {};
     const m = Object.assign({}, p);
-    Object.keys(user).forEach(k => { if (!p[k]) { const a = user[k]; if (!Object.values(p).includes(a)) m[k] = a; } });
+    // Tablo güncellenince kullanıcının kendi atamaları korunur
+    const upgrade = keepUser && s.presetDone && s.presetDone[name];
+    Object.keys(user).forEach(k => { if (upgrade || !p[k]) { const a = user[k]; if (upgrade || !Object.values(p).includes(a)) m[k] = a; } });
     s.profiles[name] = m; s.map = Object.assign({}, m); s.activeProfile = name;
     s.presetDone = s.presetDone || {}; s.presetDone[name] = DJ.PRESETS.ver;
     s.pitchInv = (DJ.PRESETS.inv || []).includes(presetIdx(name));

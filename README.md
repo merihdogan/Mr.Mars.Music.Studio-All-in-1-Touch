@@ -48,7 +48,7 @@ Press **⛶ Touch Controller** in the DJ Mixer tab and the whole screen turns in
 | | |
 |---|---|
 | 🎚 **Produce** | Arranger, Session, Pattern Rack, mixer and automation |
-| 🎧 **Perform** | 4-deck DJ Mixer with stems, Automix and transition recipes; ready mappings for 97 controller models and an assign wizard for the rest |
+| 🎧 **Perform** | 4-deck DJ Mixer with stems, Automix and transition recipes; ready mappings for 106 controller models and an assign wizard for the rest |
 | 🎸 **Sound** | 125 instrument sounds, Amp Rack and 50+ effects, including European metal tones and basses |
 | 🇹🇷 **East meets West** | 15 Turkish maqams in 53-comma tuning for each track, 20 Turkish instruments, 7 fretless electric guitar tones and 22 Eastern percussion sounds |
 | 🎼 **Start fast** | 23 backing styles from House to Oriental; Re-Play turns audio into notes, tabs and MIDI |
