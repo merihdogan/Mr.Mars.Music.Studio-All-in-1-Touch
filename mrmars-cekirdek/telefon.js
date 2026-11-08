@@ -2,7 +2,7 @@
    QR kodla eşleşen telefona doğrudan gönderir. Dosya hiçbir sunucuya yüklenmez. */
 (function (OS) {
   const U = OS.U, el = U.el, ui = OS.ui, E = OS.engine, Link = window.OSLink;
-  const PAGE = 'https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/telefon.html';
+  const PAGE = 'https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/telefon.html';
   const P = OS.phone = { base: null, link: null, stream: null };
   const pageUrl = () => P.base || (/^https?:$/.test(location.protocol) ? new URL('telefon.html', location.href).href : PAGE);
   const wait = ms => new Promise(r => { if (ms) { setTimeout(r, ms); return; } const c = new MessageChannel(); c.port1.onmessage = () => r(); c.port2.postMessage(0); });

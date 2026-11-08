@@ -109,7 +109,7 @@
       if (!this.buffer || this.stems || this.stemProg != null) return;
       const id = this.loadId, buf = this.buffer;
       this.stemProg = 0; DJ.renderInfo();
-      const st = await OS.dsp.separate(buf, p => { this.stemProg = p; DJ.renderInfo(); });
+      const st = await OS.dsp.separateFast(buf, p => { this.stemProg = p; DJ.renderInfo(); });
       if (id !== this.loadId) return;
       this.stems = OS.dsp.toBuffers(this.ctx, st, buf.sampleRate);
       this.stemProg = null;
@@ -208,7 +208,7 @@
       const s = this.scr; if (!s) return;
       const now = performance.now(), dt = Math.max(0.001, (now - s.t) / 1000); s.t = now;
       const normal = (settings.jogRes || 720) * 33.333 / 60; // normal hızda saniyedeki tık
-      let v = s.v * 0.7 + (s.ticks / (dt * normal)) * (settings.jogSens || 1) * 0.3;
+      let v = s.direct != null ? s.direct : s.v * 0.55 + (s.ticks / (dt * normal)) * (settings.jogSens || 1) * 0.45;
       s.ticks = 0;
       if (Math.abs(v) < 0.01) v = 0;
       v = U.clamp(v, -4, 4);
@@ -334,7 +334,7 @@
     master = ctx.createGain(); masterOut = ctx.createGain(); master.an = ctx.createAnalyser(); DJ.mfx = { id: '', amt: 0.5, dev: null }; DJ.limIn = ctx.createAnalyser(); DJ.limIn.fftSize = 1024; master.limit = ctx.createGain(); master.limit.gain.value = 0.25;
     const shaper = ctx.createWaveShaper(), n = 8193, cv = new Float32Array(n);
     for (let i = 0; i < n; i++) { const x = (i / (n - 1) * 2 - 1) * 4, m = Math.abs(x), knee = 0.89; cv[i] = Math.sign(x) * (m <= knee ? m : knee + (1 - knee) * Math.tanh((m - knee) / (1 - knee))); }
-    shaper.curve = cv; master.limit.connect(shaper); shaper.connect(masterOut); master.limit.connect(DJ.limIn);
+    shaper.curve = cv; master.limit.connect(shaper); shaper.connect(masterOut); DJ.tap = ctx.createGain(); shaper.connect(DJ.tap); master.limit.connect(DJ.limIn);
     master.connect(master.limit); masterOut.connect(master.an);
     cueBus = ctx.createGain();
     DJ.cueMaster = ctx.createGain(); masterOut.connect(DJ.cueMaster); DJ.cueMaster.connect(cueBus);
@@ -520,11 +520,9 @@
   let infoQueued = false;
   DJ.renderInfo = function () { if (infoQueued) return; infoQueued = true; requestAnimationFrame(() => { infoQueued = false; infoEls.forEach(f => f()); }); };
 
-  DJ.render = function () {
-    build();
-    root.innerHTML = ''; infoEls.length = 0; learnEls.clear();
-    const n = settings.count, decks = DJ.decks.slice(0, n);
-    const top = el('div', { class: 'toolbar dj-bar' },
+  function topBar() {
+    const n = settings.count;
+    return el('div', { class: 'toolbar dj-bar' },
       el('label', null, 'Deck sayısı', el('select', { onchange: e => { settings.count = +e.target.value; saveSettings(); DJ.render(); } }, [2, 4].map(k => el('option', { value: k, selected: k === n }, k)))),
       el('label', null, 'Kulaklık (cue) çıkışı', el('select', { onchange: e => { settings.cueMode = e.target.value; saveSettings(); applyOut(); } },
         [['off', 'Kapalı'], ['split', 'Bölünmüş: Sol=master, Sağ=kulaklık'], ['quad', '4 kanallı kart: çıkış 3-4']].map(([v, l]) => el('option', { value: v, selected: v === settings.cueMode }, l)))),
@@ -540,7 +538,16 @@
       el('button', { class: 'btn sm' + (DJ.shift ? ' on' : ''), title: 'Pedlerin ikinci işlevi (dokunmatik için)', onclick: e => { DJ.shift = !DJ.shift; e.target.classList.toggle('on', DJ.shift); } }, 'SHIFT'),
       el('span', { class: 'spacer' }),
       DJ.ctrl && DJ.ctrl.connected() ? el('button', { class: 'btn sm dev-chip', title: OS.t('Cihaz menüsü'), onclick: () => DJ.ctrl.open() }, '🎛 ' + DJ.ctrl.connected()) : null,
+      el('button', { class: 'btn sm', title: OS.t('Tam ekran dokunmatik DJ kontrolcüsü'), onclick: () => DJ.touch.enter() }, '⛶ ' + OS.t('Dokunmatik Kontrolcü')),
       el('button', { class: 'btn sm primary', onclick: () => DJ.ctrl.open() }, 'Controller Merkezi'));
+  }
+
+  DJ.render = function () {
+    build();
+    root.innerHTML = ''; infoEls.length = 0; learnEls.clear();
+    if (DJ.touch && DJ.touch.on) { DJ.touch.render(root); if (!DJ._raf) { DJ._raf = true; requestAnimationFrame(frame); } return; }
+    const n = settings.count, decks = DJ.decks.slice(0, n);
+    const top = topBar();
     root.appendChild(top);
     if (DJ.learn) root.appendChild(el('div', { class: 'learn-hint' }, el('button', { class: 'btn sm primary', style: 'margin-right:8px', onclick: () => { DJ.learn = false; DJ.pending = null; DJ.render(); } }, 'Bitir'), 'MIDI öğrenme: önce ekranda bir kontrole tıklayın (yanıp söner), sonra controller’ınızda ilgili düğmeye / knob’a / fader’a dokunun. Tüm markaların MIDI controller’ları bu yolla eşlenebilir.'));
     const mix = mixerUI(decks);
@@ -552,6 +559,7 @@
     root.appendChild(DJ.lib.ui());
     root.appendChild(el('div', { class: 'dj-bottom' }, DJ.auto.ui(), DJ.hist.ui()));
     root.appendChild(DJ.video.ui());
+    root.appendChild(DJ.touch.extras());
     root.appendChild(el('div', { class: 'muted' }, 'İpucu: Parçaları decklere sürükleyip bırakın. Boşluk = Deck A, Enter = Deck B çal/duraklat. Key lock açıkken tempo değişse de perde korunur.'));
     if (!DJ._raf) { DJ._raf = true; requestAnimationFrame(frame); }
   };
@@ -629,11 +637,7 @@
       d.jogEl.style.transform = `rotate(${(p * 33.3 / 60 * 360) % 360}deg)`;
     };
     ov.addEventListener('mousedown', e => { if (!d.buffer) return; const r = ov.getBoundingClientRect(); d.seek((e.clientX - r.left) / r.width * d.buffer.duration); upd(); });
-    jog.addEventListener('mousedown', e => {
-      if (DJ.learn) return;
-      const p0 = d.position();
-      U.drag(e, dx => { if (d.playing) d.setNudge(U.clamp(dx / 400, -0.2, 0.2)); else d.seek(p0 + dx / 200); }, () => d.setNudge(0));
-    });
+    DJ.touch.bindJog(jog, d);
     const fxSlot = i => {
       const nm = i ? `${A}.fx${i + 1}` : `${A}.fx`;
       const k = learnable(U.knob({ label: 'FX ' + (i + 1), size: 28, min: 0, max: 1, def: 0.5, value: d.fx[i].amt, fmt: v => Math.round(v * 100) + '%', onchange: v => d.setFxAmt(v, i) }), nm);
@@ -1752,5 +1756,6 @@
   };
   addEventListener('keyup', e => { const kp = KEY_PADS[e.code]; if (kp && built && ui.view === 'dj') { padRelease(DJ.decks[kp[0]], kp[1]); DJ.renderInfo(); } });
   // Controller Merkezi ve video katmanı için iç erişim
-  DJ._i = { settings, saveSettings, relDelta, applyOut, midiMenu, getMasterOut: () => masterOut, getMaster: () => master, isBuilt: () => built, build };
+  DJ._i = { settings, saveSettings, relDelta, applyOut, midiMenu, getMasterOut: () => masterOut, getMaster: () => master, getTap: () => DJ.tap, isBuilt: () => built, build,
+    infoEls, topBar, padsUI, sendUI, runAction, padPress, padRelease, padLabel, padClass, padTitle, PAD_MODES, STEMS, STEM_LBL, FX, LETTERS, applyX, otherDeck, keyMatch, drawOverview, drawZoom, autoMix, toggleRec, setMasterFx, setMasterFxAmt, jogTouch };
 })(window.OS);

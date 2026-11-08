@@ -65,6 +65,18 @@
     const lvl = d => d && d.playing ? d.xf.gain.value * d.fader.gain.value : 0, la = lvl(a), lb = lvl(b);
     return la + lb < 0.001 ? DJ.xfade : lb / (la + lb);
   }
+  let off = null;
+  function offscreen() { if (off) return; off = [0, 1].map(() => { const c = document.createElement('canvas'); c.width = W; c.height = H; return { c, g: c.getContext('2d') }; }); }
+  function ensure() { if (!cv) { cv = el('canvas', { class: 'dj-video-cv', width: W, height: H }); g = cv.getContext('2d'); } }
+  let stream = null;
+  V.stream = () => { ensure(); if (!stream) stream = cv.captureStream(30); V.start(); return stream; };
+  // Elle geçişi 2 saniyede diğer kaynağa götürür
+  V.auto = function (sec) {
+    V.link = 'manual'; const a = V.manual, b = a < 0.5 ? 1 : 0, t0 = performance.now(), T = (sec || 2) * 1000;
+    if (!V.on) V.start();
+    const step = () => { const k = Math.min(1, (performance.now() - t0) / T); V.manual = a + (b - a) * k; if (V._x) V._x.value = V.manual; if (k < 1) requestAnimationFrame(step); };
+    step();
+  };
   function frame() {
     raf = 0;
     if (!V.on) return;
@@ -79,13 +91,18 @@
       const a = ds.find(d => d.playing && d.xAssign === 'A') || ds.find(d => d.xAssign === 'A') || ds[0];
       const b = ds.find(d => d.playing && d.xAssign === 'B') || ds.find(d => d.xAssign === 'B') || ds[1];
       const k = U.clamp(mixAmount(a, b), 0, 1);
-      if (V.trans === 'wipe') {
-        layer(g, a, 1); g.save(); g.beginPath(); g.rect(0, 0, W * k, H); g.clip(); g.fillStyle = '#000'; g.fillRect(0, 0, W, H); layer(g, b, 1); g.restore();
-      } else if (V.trans === 'zoom') {
-        layer(g, a, 1 - k); g.save(); g.translate(W / 2, H / 2); const z = 0.6 + 0.4 * k; g.scale(z, z); g.translate(-W / 2, -H / 2); layer(g, b, k); g.restore();
-      } else { layer(g, a, 1 - k); layer(g, b, k); }
+      if (k <= 0.002) layer(g, a, 1);
+      else if (k >= 0.998) layer(g, b, 1);
+      else {
+        offscreen();
+        off[0].g.fillStyle = off[1].g.fillStyle = '#000'; off[0].g.fillRect(0, 0, W, H); off[1].g.fillRect(0, 0, W, H);
+        layer(off[0].g, a, 1); layer(off[1].g, b, 1);
+        const out = DJ.gecis && DJ.gecis.draw(V.trans, off[0].c, off[1].c, k);
+        if (out) g.drawImage(out, 0, 0); else { layer(g, a, 1 - k); layer(g, b, k); }
+      }
       if (V.title) { const top = k < 0.5 ? a : b; if (top && top.buffer) { g.font = '600 34px Segoe UI, sans-serif'; g.fillStyle = 'rgba(0,0,0,.55)'; const t = top.name, w2 = g.measureText(t).width; g.fillRect(24, H - 84, w2 + 32, 56); g.fillStyle = '#fff'; g.fillText(t, 40, H - 44); } }
     }
+    if (DJ.karaoke) DJ.karaoke.draw(g, W, H);
     if (outWin) {
       if (outWin.closed) { outWin = null; outCtx = null; }
       else outCtx.drawImage(cv, 0, 0);
@@ -121,16 +138,17 @@
     U.toast(V.slides.length + ' ' + OS.t('görsel yüklendi'));
   };
   V.ui = function () {
-    cv = el('canvas', { class: 'dj-video-cv', width: W, height: H }); g = cv.getContext('2d');
+    ensure();
     const sel = (opts, val, on) => el('select', { onchange: e => on(e.target.value) }, opts.map(([v, l]) => el('option', { value: v, selected: v === val }, l)));
     const onB = el('button', { class: 'btn sm' + (V.on ? ' on' : ''), onclick: () => { V.on ? V.stop() : V.start(); onB.classList.toggle('on', V.on); } }, 'Video');
-    const xSl = el('input', { type: 'range', min: 0, max: 1, step: 0.01, value: V.manual, title: OS.t('Elle video geçişi'), oninput: e => V.manual = +e.target.value });
+    const xSl = el('input', { type: 'range', min: 0, max: 1, step: 0.01, value: V.manual, title: OS.t('Elle video geçişi'), oninput: e => V.manual = +e.target.value }); V._x = xSl;
     if (V.on && !raf) V.start();
     return el('div', { class: 'dj-panel dj-video' },
       el('div', { class: 'row wrap' }, el('b', null, OS.t('Video Motoru')), onB,
         el('label', { class: 'field' }, OS.t('Kaynak'), sel([['auto', 'Decklerin görüntüsü'], ['vis', 'Görselleştirici'], ['cam', 'Kamera'], ['slides', 'Slayt gösterisi']], V.source, V.setSource)),
         el('label', { class: 'field' }, OS.t('Görsel'), sel([['bars', 'Çubuk'], ['scope', 'Dalga'], ['radial', 'Halka']], V.vis, v => V.vis = v)),
-        el('label', { class: 'field' }, OS.t('Geçiş'), sel([['fade', 'Fade'], ['wipe', 'Wipe'], ['zoom', 'Zoom']], V.trans, v => V.trans = v)),
+        el('label', { class: 'field' }, OS.t('Geçiş'), sel(DJ.gecis.LIST.map(x => [x[0], x[1]]), V.trans, v => V.trans = v)),
+        el('button', { class: 'btn sm', title: OS.t('Görüntüyü 2 saniyede diğer kaynağa geçirir'), onclick: () => V.auto(2) }, OS.t('Geçişi çalıştır')),
         el('label', { class: 'field' }, OS.t('Video crossfader'), sel([['smart', 'Akıllı (duyulana göre)'], ['linked', 'Crossfader’a bağlı'], ['manual', 'Elle']], V.link, v => V.link = v)), xSl,
         el('label', { class: 'field' }, el('input', { type: 'checkbox', checked: V.title, onchange: e => V.title = e.target.checked }), OS.t('Parça adı')),
         el('button', { class: 'btn sm', onclick: V.pickSlides }, 'Slayt görselleri…'),

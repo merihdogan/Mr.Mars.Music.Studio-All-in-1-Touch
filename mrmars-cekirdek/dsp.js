@@ -92,6 +92,34 @@
     progress && progress(1);
     return out;
   };
+  // Çok çekirdekli ayırma: parça dilimlere bölünür, her dilim ayrı iş parçacığında işlenir, arayüz hiç beklemez.
+  // Dilimler kare ızgarasına oturur ve kenar payıyla işlenir; birleşim yerinde iz kalmaz.
+  DSP.separateFast = async function (buffer, progress) {
+    const cores = Math.min(8, Math.max(1, (navigator.hardwareConcurrency || 2) - 1)), len = buffer.length, hop = 1024, pad = hop * 8;
+    if (typeof Worker === 'undefined' || cores < 2 || len < buffer.sampleRate * 8) return DSP.separate(buffer, progress);
+    const src = 'const pause=()=>Promise.resolve();const fft=' + fft + ';const med9=' + med9 + ';const separate=' + DSP.separate + ';' +
+      'onmessage=async e=>{const m=e.data,b={sampleRate:m.sr,length:m.L.length,numberOfChannels:2,getChannelData:c=>c?m.R:m.L};' +
+      'const o=await separate(b,p=>postMessage({p}));const r={},t=[];for(const k in o){r[k]=[o[k][0].slice(m.a,m.b),o[k][1].slice(m.a,m.b)];t.push(r[k][0].buffer,r[k][1].buffer)}postMessage({r,i:m.i},t)}';
+    let url;
+    try {
+      url = URL.createObjectURL(new Blob([src], { type: 'text/javascript' }));
+      const L = buffer.getChannelData(0), R = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : L;
+      const size = Math.ceil(len / cores / hop) * hop, parts = new Array(cores), prog = new Array(cores).fill(0);
+      const out = {}; ['vocals', 'drums', 'bass', 'melody'].forEach(k => out[k] = [new Float32Array(len), new Float32Array(len)]);
+      await Promise.all(Array.from({ length: cores }, (_, i) => new Promise((res, rej) => {
+        const w = new Worker(url), s = i * size, e = Math.min(len, s + size), s0 = Math.max(0, s - pad), e0 = Math.min(len, e + pad);
+        w.onerror = ev => { w.terminate(); rej(ev); };
+        w.onmessage = ev => {
+          if (ev.data.r) { for (const k in out) { out[k][0].set(ev.data.r[k][0], s); out[k][1].set(ev.data.r[k][1], s); } w.terminate(); res(); return; }
+          prog[i] = ev.data.p; progress && progress(prog.reduce((x, y) => x + y, 0) / cores);
+        };
+        w.postMessage({ i, sr: buffer.sampleRate, L: L.slice(s0, e0), R: R.slice(s0, e0), a: s - s0, b: e - s0 });
+      })));
+      progress && progress(1);
+      return out;
+    } catch (e) { console.warn(e); return DSP.separate(buffer, progress); }
+    finally { if (url) URL.revokeObjectURL(url); }
+  };
   DSP.STEM_NAMES = { vocals: 'Vokal', drums: 'Davul', bass: 'Bas', melody: 'Melodi' };
   DSP.toBuffers = (ctx, stems, sr) => {
     const o = {};

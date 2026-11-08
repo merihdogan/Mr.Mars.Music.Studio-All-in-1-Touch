@@ -3,7 +3,7 @@
    SoundCloud sesi kopyalanmaz. Yalnız bu tek sayfa listelenir, başka adres girilemez. */
 (function (OS) {
   const U = OS.U, el = U.el, DJ = OS.ui.dj, CFG = window.OS_MY_MUSIC;
-  const SITE = 'https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/';
+  const SITE = 'https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/';
   const M = DJ.myMusic = { base: null, tracks: null };
   const base = () => M.base || (/^https?:$/.test(location.protocol) ? new URL('.', location.href).href : SITE);
   const fileUrl = slug => base() + 'mrmars-muzik/' + encodeURIComponent(slug) + '.mp3';

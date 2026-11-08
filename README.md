@@ -1,17 +1,54 @@
-<p align="center"><a href="https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/"><img src="mrmars-gorseller/canli-dene.svg" alt="Try the live app" width="520"></a></p>
+<p align="center"><a href="https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/"><img src="mrmars-gorseller/canli-dene.svg" alt="Try the live app" width="520"></a></p>
 
-<p align="center"><a href="https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/"><img src="mrmars-gorseller/tanitim-kart.png" alt="Mr. Mars Music Studio All in 1" width="820"></a></p>
+<p align="center"><a href="https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/"><img src="mrmars-gorseller/tanitim-touch.jpg" alt="Touch Controller with large jog wheels, pads and mixer" width="860"></a></p>
 
-<h1 align="center">A full music studio in your browser</h1>
+<h1 align="center">Mr. Mars Music Studio All in 1 · Touch</h1>
 
-<p align="center"><b>No install. No account. No cost.</b> Make a track, mix a set and scan a QR code to get it on your phone.</p>
+<p align="center"><b>A full music studio and a real DJ controller, right on your touch screen.</b><br>No install. No account. No cost. Open the link and play.</p>
 
-<p align="center"><a href="User%20Manual_en_english.pdf">Manual (PDF)</a> · <a href="LICENSE">MIT License</a></p>
+<p align="center"><a href="https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/"><b>▶ Open the live app</b></a> · <a href="User%20Manual_en_english.pdf">Manual (PDF)</a> · <a href="LICENSE">MIT License</a> · Version M.D.26/ V.08.11. Touch</p>
+
+## What it is
+
+Mr. Mars Music Studio All in 1 is a complete music workstation and DJ system that runs in your browser. Write and record a track, play your guitar through an amp rack, mix a set on up to four decks, put visuals on a second screen, go live, and send the finished file to your phone with one QR scan.
+
+Everything runs on your own computer. Your music is not uploaded anywhere to be processed, and after the first visit the app works offline.
+
+This edition is built for touch. On a large touch screen the DJ Mixer becomes a full-size controller you play with your hands.
+
+## Play it like real hardware
+
+Press **⛶ Touch Controller** in the DJ Mixer tab and the whole screen turns into a controller.
+
+| | |
+|---|---|
+| 💿 **Scratch with your hand** | Large jog wheels follow the angle of your finger. Touch the record and the sound follows you forwards and backwards. The outer ring bends the tempo, just like the edge of a platter. |
+| 🖐 **Every finger counts** | Pads, faders, knobs and the crossfader each follow their own finger. Hold a loop, ride the crossfader and scratch at the same time. |
+| 🎚 **A complete desk** | Two or four decks, three or four band EQ with kills, filter, trim, tall channel faders, tempo faders, headphone cue and a big crossfader. |
+| 🥁 **Performance pads** | Hot Cue, Loop Roll, Slicer, Beat Jump, Cue Loop, Key Cue, Stems, Scratch patterns and more, eight large pads per deck. |
+| 📂 **Nothing is hidden** | Library, Sampler, Automix, History, Video, Karaoke, Live Broadcast, Lights, Timecode, Script and Settings all open in a side sheet sized for fingers. |
+| 📐 **Every tab, not just DJ** | Arranger, Mixer, Pattern Rack, Amp Rack and the rest get larger controls on touch screens. Chords work on the on-screen piano. You can set this to automatic, on or off. |
+
+## New in this version
+
+| Feature | What you get |
+|---|---|
+| ⚡ **Faster stems** | Vocal, drum, bass and melody separation now uses all your processor cores. A three-minute track splits in seconds while the app stays responsive. |
+| 🎛 **Timecode vinyl and CD** | Drive a deck from a real turntable or CD player with timecode media. Speed and direction are read from the stereo signal (relative mode). |
+| 🎤 **Karaoke** | Synced LRC lyrics, tap-to-time for any text, vocal level control, a singer queue and lyrics on the video output. |
+| 📡 **Live broadcast** | Share a link or QR code and up to 8 listeners hear your mix directly from your device, with video if you want. For a bigger audience, stream MP3 to an internet radio server through the small included bridge program. |
+| 💡 **DMX lights** | Connect a USB DMX interface, list your fixtures and let beat-driven scenes run the room. |
+| 🎞 **42 video transitions** | GPU transitions between decks, from clean wipes to warp tunnels. |
+| ⌨️ **Your own commands** | A small script language for custom buttons: `B.sync ; B.play ; fade xfader 1 16b`. |
+| 🎶 **Smarter sets** | Build a harmonic set from your library by key and BPM flow, then export the Tracklist, a CUE sheet or CSV. |
+| 🖤 **Premium look** | Charcoal panels, black knobs with a thin white arc and a single red LED for what is on. |
+
+## Everything in one place
 
 | | |
 |---|---|
 | 🎚 **Produce** | Arranger, Session, Pattern Rack, mixer and automation |
-| 🎧 **Perform** | 4-deck DJ Mixer with stems, Automix and transition recipes; ready mappings for 97 controller models |
+| 🎧 **Perform** | 4-deck DJ Mixer with stems, Automix and transition recipes; ready mappings for 97 controller models and an assign wizard for the rest |
 | 🎸 **Sound** | 125 instrument sounds, Amp Rack and 50+ effects, including European metal tones and basses |
 | 🇹🇷 **East meets West** | 15 Turkish maqams in 53-comma tuning for each track, 20 Turkish instruments, 7 fretless electric guitar tones and 22 Eastern percussion sounds |
 | 🎼 **Start fast** | 23 backing styles from House to Oriental; Re-Play turns audio into notes, tabs and MIDI |
@@ -21,7 +58,23 @@
 
 <p align="center"><img src="mrmars-gorseller/tanitim-dj.jpg" alt="DJ Mixer" width="49%"> <img src="mrmars-gorseller/tanitim-amfi.jpg" alt="Amp Rack" width="49%"></p>
 
-<p align="center"><a href="https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/"><img src="mrmars-gorseller/canli-dene.svg" alt="Try the live app" width="520"></a></p>
+<p align="center"><a href="https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/"><img src="mrmars-gorseller/canli-dene.svg" alt="Try the live app" width="520"></a></p>
+
+## Getting started
+
+1. Open the [live app](https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/) in Chrome or Edge. These browsers support MIDI, USB devices and the full audio feature set.
+2. Go to **DJ Mixer**, press **⛶ Touch Controller** and load a track from the side sheet.
+3. Touch the record to scratch. Press ✕ at the top left to go back to the normal view.
+
+To run it without internet, download this repository and open `index.html`. For internet radio, run `node yayin-kopru.js` on the same computer. Node.js is needed only for that bridge.
+
+## Good to know
+
+- Stem separation uses signal processing, not a neural network, so results are approximate.
+- Timecode runs in relative mode: moving the needle to another spot does not jump in the track.
+- Touch behaviour depends on your screen and how many touch points it reports.
+- Hardware controllers and lighting interfaces vary. Ready mappings have not been tried on every device.
+- Browsers cannot connect to paid streaming catalogues without licences, so you play your own files.
 
 ## Every tab is a studio of its own
 
@@ -57,7 +110,7 @@
 
 ---
 
-MR. MARS MUSIC STUDIO ALL IN 1 — M.D. 26. V.07.11 ·
+MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch ·
 
 From Traditional to Universal: Limitless Performance  
 Mr.Mars Studio originally began as a dedicated tool to streamline live performances for musicians blending electric guitar and saz with DJ gear.  
@@ -65,7 +118,7 @@ Today, it has evolved into a universally compatible ecosystem—empowering artis
 While versatile enough to create any genre through DJ tools and MIDI controllers, at its core, it is a unique Euro-Turk innovation that fuses Northern European and Eastern cultures, synthesizing traditional instruments with modern musical disciplines.  
 Its plugin expandability and seamless integration with industry-standard DJ equipment elevate Mr.Mars Studio into a truly global league.
 
-**User Manual:** [PDF](User%20Manual_en_english.pdf) · [Web page](https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/User%20Manual_en_english.html). In the app, press ❓ Manual beside the top menus.
+**User Manual:** [PDF](User%20Manual_en_english.pdf) · [Web page](https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/User%20Manual_en_english.html). In the app, press ❓ Manual beside the top menus.
 
 ================================================================
 

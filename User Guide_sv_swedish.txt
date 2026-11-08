@@ -1,6 +1,13 @@
-MR. MARS MUSIC STUDIO ALL IN 1 — M.D. 26. V.07.11 · MRH DGN
+MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · MRH DGN
 Bärbar musikproduktionsmiljö utan installation och utan internet
 Illustrerad handbok (engelska): tryck på ❓ Manual bredvid toppmenyerna eller öppna "User Manual_en_english.pdf".
+
+NYTT I M.D.26/ V.08.11. Touch
+- Pekskärmar: helskärms pekkontroller i DJ-fliken, stora jogghjul för scratch med handen, pads och
+  fadrar med flera fingrar, alla menyer i en sidopanel (Verktyg > Pekgränssnitt).
+- Stems använder alla processorkärnor. Timecode (relativt läge). Karaoke (LRC, sångarkö).
+- Livesändning: länk med QR för upp till 8 lyssnare eller MP3 till internetradio via bryggan yayin-kopru.js (Node).
+- Ljus: DMX512 via USB. 42 videoövergångar. Script: egna knappar med ett kommandospråk.
 
 NYTT I M.D. 26. V.07.11
 - Premium minimalistiskt utseende: koltonade paneler, svarta rattar med tunn vit båge, röd LED

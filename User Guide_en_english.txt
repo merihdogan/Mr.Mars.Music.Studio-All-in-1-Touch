@@ -1,6 +1,19 @@
-MR. MARS MUSIC STUDIO ALL IN 1 — M.D. 26. V.07.11 · MRH DGN
+MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · MRH DGN
 Portable, install-free, offline music production environment
 Illustrated manual: press ❓ Manual beside the top menus, or open "User Manual_en_english.pdf".
+
+NEW IN M.D.26/ V.08.11. Touch
+- Touch screens: the DJ tab has a full-screen Touch Controller: large jog wheels you can scratch with
+  your hand (platter = scratch, outer ring = tempo bend), multi-finger pads and faders, every menu in a
+  side sheet. All tabs get larger controls on touch screens (Tools > Touch interface).
+- Stems now use all processor cores: a 3-minute track splits in a few seconds without pausing the app.
+- Timecode: control a deck from a turntable or CD player with timecode media (relative mode, speed and
+  direction; carrier selectable or measured).
+- Karaoke: LRC lyrics, tap-to-time, vocal level, singer queue, lyrics on the video output.
+- Live broadcast: listen link with QR for up to 8 listeners (sound and video), or MP3 to an internet
+  radio server through the included yayin-kopru.js bridge (run it with Node).
+- Lights: DMX512 output through a USB serial interface, beat-driven scenes, fixture list.
+- 42 video transitions. Script: write your own buttons with a small command language.
 
 NEW IN M.D. 26. V.07.11
 - Premium minimal look: charcoal panels, black knobs with a thin white value arc, a red LED for

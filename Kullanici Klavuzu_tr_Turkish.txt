@@ -1,6 +1,19 @@
-MR. MARS MUSIC STUDIO ALL IN 1 — M.D. 26. V.07.11 · MRH DGN
+MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · MRH DGN
 Taşınabilir, kurulumsuz, internetsiz müzik yapım ortamı
 Görselli kılavuz (İngilizce): üst menülerin yanındaki ❓ Kılavuz düğmesine basın veya "User Manual_en_english.pdf" dosyasını açın.
+
+M.D.26/ V.08.11. Touch İLE GELENLER
+- Dokunmatik ekran: DJ sekmesinde tam ekran Dokunmatik Kontrolcü var. Büyük jog tekerleklerinde elle
+  scratch atılır (plak yüzeyi scratch, dış halka tempo itme), pedler ve faderler birden çok parmakla
+  kullanılır, bütün menüler yan panelde açılır. Tüm sekmelerde kontroller dokunmatik ekranda büyür
+  (Araçlar > Dokunmatik arayüz).
+- Stem ayırma artık bütün işlemci çekirdeklerini kullanıyor: 3 dakikalık parça birkaç saniyede ayrılır.
+- Timecode: timecode plak veya CD ile deck sürülür (göreli mod: hız ve yön; taşıyıcı seçilir veya ölçülür).
+- Karaoke: LRC söz dosyası, dokunarak zamanlama, vokal seviyesi, şarkıcı sırası, video çıkışında söz.
+- Canlı yayın: en fazla 8 dinleyici için QR'lı dinleme bağlantısı (ses ve video) veya klasördeki
+  yayin-kopru.js köprüsüyle internet radyosuna MP3 (Node ile çalıştırılır).
+- Işık: USB seri arabirimle DMX512 çıkışı, vuruşa bağlı sahneler, armatür listesi.
+- 42 video geçişi. Script: küçük bir komut diliyle kendi düğmelerinizi yazın.
 
 M.D. 26. V.07.11 İLE GELENLER
 - Premium sade görünüm: kömür grisi paneller, ince beyaz değer yaylı siyah düğmeler, açık veya

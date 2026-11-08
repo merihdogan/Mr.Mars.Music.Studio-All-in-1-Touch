@@ -105,6 +105,7 @@
       { label: 'Format Dönüştürücü…', onclick: () => OS.converter.open() },
       { label: 'Ses ayarları (giriş/çıkış, gecikme)…', onclick: audioSettings },
       { label: 'MIDI ayarları (Clock, controller)…', onclick: () => OS.midiClock.dialog() },
+      { label: OS.t('Dokunmatik arayüz') + ': ' + OS.t({ auto: 'Otomatik', on: 'Açık', off: 'Kapalı' }[OS.platform.touchPref]), onclick: () => { const P = OS.platform, next = { auto: 'on', on: 'off', off: 'auto' }[P.touchPref]; P.setTouchPref(next); location.reload(); } },
       { label: 'Klavye kısayolları', onclick: shortcutsHelp },
       { label: 'Depolama: kullanılmayan sesleri temizle', onclick: cleanAudio },
       ...(OS.platform.canInstall() ? [{ label: 'Ana ekrana ekle', onclick: OS.platform.install }] : []),
@@ -302,7 +303,7 @@
     [...OS.LANGS].sort((a, b) => OS.LANG_NAMES[a].localeCompare(OS.LANG_NAMES[b])).forEach(c => items.push({ label: (!OS.langAuto && OS.lang === c ? '✓ ' : '') + OS.LANG_NAMES[c], onclick: () => OS.setLang(c) }));
     return items;
   }
-  ui.VERSION = 'M.D. 26. V.07.11';
+  ui.VERSION = 'M.D.26/ V.08.11. Touch';
   OS.YAPIMCI = 'MRH DGN';
   ui.openManual = () => window.open(encodeURI('User Manual_en_english.html'), '_blank');
   function about() {

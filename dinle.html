@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mr. Mars Live</title><meta name="theme-color" content="#141414">
+<style>
+:root{color-scheme:dark;--bg:#141414;--card:#1f1f1f;--fg:#ececec;--mut:#9a9a9a;--led:#ff3b30}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:15px "Segoe UI",system-ui,sans-serif}
+main{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:20px}
+.card{width:min(720px,100%);background:var(--card);border:1px solid #2e2e2e;border-radius:8px;padding:22px;display:flex;flex-direction:column;gap:14px;align-items:center;text-align:center}
+h1{margin:0;font-size:15px;letter-spacing:3px;text-transform:uppercase;font-weight:600}
+#st{color:var(--mut);display:flex;gap:8px;align-items:center}#led{width:8px;height:8px;border-radius:50%;background:#3a3a3a}#led.on{background:var(--led);box-shadow:0 0 8px var(--led)}
+button{background:#e9e9e9;color:#111;border:0;border-radius:4px;padding:14px 34px;font:inherit;font-weight:600;cursor:pointer;min-height:48px}
+video{width:100%;background:#000;border-radius:4px;display:none}video.show{display:block}
+input[type=range]{width:220px;accent-color:#e6e6e6}
+</style></head><body><main><div class="card"><h1>Mr. Mars Live</h1><video id="v" playsinline></video>
+<div id="st"><span id="led"></span><span id="txt"></span></div><button id="go"></button><input id="vol" type="range" min="0" max="1" step=".01" value="1" hidden></div></main>
+<script src="mrmars-cekirdek/telefon-baglanti.js"></script>
+<script>
+(async function(){
+  const tr={en:{listen:'Listen',wait:'Connecting…',live:'Live',bad:'This link is not valid.',full:'The broadcast is full.',off:'Waiting for the broadcast…'},tr:{listen:'Dinle',wait:'Bağlanıyor…',live:'Canlı',bad:'Bu bağlantı geçersiz.',full:'Yayın dolu.',off:'Yayın bekleniyor…'}};
+  const T=tr[(navigator.language||'en').slice(0,2)]||tr.en,$=i=>document.getElementById(i),v=$('v'),go=$('go'),txt=$('txt'),led=$('led'),vol=$('vol');
+  go.textContent=T.listen;
+  const m=location.hash.slice(1).split('.');
+  if(m.length<2||!m[0]||!m[1]){txt.textContent=T.bad;go.hidden=true;return}
+  vol.oninput=()=>v.volume=+vol.value;
+  go.onclick=async()=>{
+    go.hidden=true;txt.textContent=T.wait;
+    const me=OSLink.rand(6);let pc=null,hello;
+    const relay=await OSLink.relay(m[0],m[1],me,async x=>{
+      if(x.t==='full'){txt.textContent=T.full;clearInterval(hello);return}
+      if(x.t!=='offer'||pc)return;
+      clearInterval(hello);
+      pc=new RTCPeerConnection({iceServers:window.OS_ICE!==undefined?window.OS_ICE:[{urls:['stun:stun.l.google.com:19302','stun:stun.cloudflare.com:3478']}]});
+      const ms=new MediaStream();v.srcObject=ms;
+      pc.ontrack=e=>{ms.addTrack(e.track);if(e.track.kind==='video')v.classList.add('show');v.play().catch(()=>{})};
+      pc.onconnectionstatechange=()=>{const on=pc.connectionState==='connected';led.classList.toggle('on',on);txt.textContent=on?T.live:T.off;vol.hidden=!on};
+      await pc.setRemoteDescription(x.desc);await pc.setLocalDescription(await pc.createAnswer());
+      await new Promise(r=>{if(pc.iceGatheringState==='complete')return r();const t=setTimeout(r,1500);pc.addEventListener('icegatheringstatechange',()=>{if(pc.iceGatheringState==='complete'){clearTimeout(t);r()}})});
+      relay.send({to:'host',t:'answer',desc:{type:'answer',sdp:pc.localDescription.sdp.split('\r\n').filter(l=>!(l.startsWith('a=candidate:')&&/ tcp /i.test(l))&&!l.startsWith('a=extmap')).join('\r\n')}});
+    });
+    const say=()=>relay.send({to:'host',t:'hello'});say();hello=setInterval(say,3000);
+    addEventListener('pagehide',()=>relay.send({to:'host',t:'bye'}));
+  };
+})();
+</script></body></html>

@@ -1,7 +1,7 @@
 # Mr. Mars Music Studio: tanıtım metinleri
 
 Paylaşım görseli: `mrmars-gorseller/tanitim-kart.png`  
-Bağlantı: https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/
+Bağlantı: https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/
 
 Numaralar programdan sayıldı. "Ücretsiz" MIT lisansına, "kurulumsuz" tarayıcıda açılmasına dayanır.
 
@@ -15,7 +15,7 @@ Tarayıcında tam bir müzik stüdyosu: kurulum yok, hesap yok, ücret yok.
 🇹🇷 53 komalı makamlar, perdesiz elektro gitar
 📱 QR'ı okut, mixin telefonuna gelsin
 
-Dene 👉 https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/
+Dene 👉 https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/
 
 ### Instagram / Facebook
 Bir bağlantıyla açılan müzik stüdyosu 🎧
@@ -46,7 +46,7 @@ Benim için en anlamlı kısımları:
 • Dağıtıma hazırlık: BS.1770 LUFS ölçümü, gerçek tepe sınırlayıcı, FLAC ve Apple Lossless çıktısı, hepsi bilgisayarın içinde.
 
 Denemek ve geri bildirim vermek isteyenler için:
-https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/
+https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/
 
 ### Kısa video (Reels, TikTok, Shorts)
 **İlk 3 saniye:** "Bu stüdyo bir tarayıcı sekmesinde çalışıyor."
@@ -102,7 +102,7 @@ A full music studio in your browser. No install, no account, no cost.
 🎼 Turkish maqams in 53-comma tuning
 📱 Scan a QR code and your mix lands on your phone
 
-Try it 👉 https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-MD.26.V.07.11/
+Try it 👉 https://merihdogan.github.io/Mr.Mars.Music.Studio-All-in-1-Touch/
 
 ### Tab by tab
 - **Arrange:** Record a song, then right-click a clip and split vocals from drums.

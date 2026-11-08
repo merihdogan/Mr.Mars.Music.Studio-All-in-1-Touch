@@ -341,7 +341,7 @@ window.OS = window.OS || {};
   // ---- Döner düğme (knob) ----
   U.knob = function (opts) {
     // opts: {label, min, max, value, def, step, curve:'log', size, fmt, onchange}
-    const size = opts.size || 42;
+    const size = Math.round((opts.size || 42) * (OS.platform && OS.platform.touchUI && !opts.exact ? 1.3 : 1));
     const wrap = U.el('div', { class: 'knob', title: opts.title || opts.label || '' });
     const svgNS = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(svgNS, 'svg');
