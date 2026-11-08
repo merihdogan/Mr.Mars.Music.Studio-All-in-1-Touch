@@ -159,12 +159,16 @@
     if (preview.dispose) preview.dispose();
     preview = null;
   }
-  function startPreview(notesOverride) {
+  async function startPreview(notesOverride) {
     const notes = notesOverride || (st.res && st.res.notes);
     if (!notes || !notes.length) { U.toast(OS.t('Önce müziği notaya çevirin')); return; }
     stopPreview(); E.resume();
     const dev = new OS.Device(E.ctx, 'inst.library', { values: instValues() });
     dev.out.connect(E.monitorBus);
+    const me = preview = { dev, dispose: () => setTimeout(() => dev.dispose(), 2000) };
+    // Gerçek kayıt yüklenmeden başlarsa ilk notalar sentezle çalar
+    if (dev.inst.ready) await dev.inst.ready;
+    if (preview !== me) return;
     const spb = 60 / (st.res ? st.res.bpm : OS.project.bpm), t0 = E.ctx.currentTime + 0.1;
     // çok sayıda notayı parça parça zamanla
     const sorted = notes.slice().sort((a, b) => a.s - b.s);
@@ -174,7 +178,6 @@
       while (i < sorted.length && t0 + sorted[i].s * spb < horizon) { const n = sorted[i++]; dev.noteOn(n.p, n.v, t0 + n.s * spb); dev.noteOff(n.p, t0 + (n.s + n.l) * spb); }
       if (i < sorted.length) preview.timer = setTimeout(pump, 250);
     };
-    preview = { dev, dispose: () => setTimeout(() => dev.dispose(), 2000) };
     pump();
   }
   function playOriginal() {
