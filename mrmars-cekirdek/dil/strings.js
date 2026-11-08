@@ -1,6 +1,7 @@
 /* Arayüz çevirileri: [Türkçe, English, Deutsch, Español, Français, Svenska, Русский]
    Yeni dil eklemek için her satıra bir sütun ekleyip i18n.js içindeki LANGS listesine kodunu yazın. */
 window.OS_STRINGS = [
+  ["Aranjmana eklendi. Başka bir parça solo açık olduğu için yeni parça duyulmaz; solo’yu kapatın.","Added to the arrangement. Another track is soloed, so the new track will not be heard; turn solo off.","Zum Arrangement hinzugefügt. Eine andere Spur ist solo, die neue Spur ist daher nicht zu hören; Solo ausschalten.","Añadido al arreglo. Otra pista está en solo, así que la nueva no se oirá; desactiva el solo.","Ajouté à l'arrangement. Une autre piste est en solo, la nouvelle ne sera donc pas entendue ; désactivez le solo.","Tillagt i arrangemanget. Ett annat spår är solo, så det nya hörs inte; stäng av solo.","Добавлено в аранжировку. Другая дорожка в соло, поэтому новая не слышна; отключите соло."],
   ["Sentez","Synthesis","Synthese","Síntesis","Synthèse","Syntes","Синтез"],
   ["Ses kaynağı","Sound source","Klangquelle","Fuente de sonido","Source sonore","Ljudkälla","Источник звука"],
   ["Gerçek ses ata…","Assign real sound…","Echten Klang zuweisen…","Asignar sonido real…","Attribuer un son réel…","Tilldela riktigt ljud…","Назначить реальный звук…"],

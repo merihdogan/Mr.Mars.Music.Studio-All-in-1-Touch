@@ -206,7 +206,9 @@
     }
     ui.selectedTrack = t.id;
     E.syncAll(); ui.changed(); ui.updateTransportUI();
-    U.toast(OS.t('Aranjmana eklendi'));
+    OS.transport.setPosition(0);
+    // Başka bir parça solodaysa yeni parça duyulmaz: sesi kesmeden haber ver
+    U.toast(P.tracks.some(x => x.solo) ? OS.t('Aranjmana eklendi. Başka bir parça solo açık olduğu için yeni parça duyulmaz; solo’yu kapatın.') : OS.t('Aranjmana eklendi'), P.tracks.some(x => x.solo) ? 7000 : undefined);
     ui.showView('arrange');
   }
   function applyToTrack() {
