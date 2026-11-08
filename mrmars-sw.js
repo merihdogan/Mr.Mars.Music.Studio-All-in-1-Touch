@@ -2,7 +2,7 @@
  * Dosya listesi index.html'den okunur, yeni dosya için liste tutmak gerekmez.
  * Program dosyaları önce ağdan istenir, böylece yenileme hep son sürümü açar; ağ yoksa önbellek kullanılır.
  * Görsel ve büyük dosyalar önbellekten hemen açılır, arka planda güncellenir. */
-const CACHE = 'mrmars-v26';
+const CACHE = 'mrmars-v27';
 const FIXED = ['./', 'index.html', 'manifest.webmanifest', 'mrmars-eklentiler/index.js', 'mrh-cihazlar/ornek-davul.js', 'telefon.html', 'dinle.html', 'mrmars-cekirdek/mp3kod.js', 'mrmars-cekirdek/telefon-baglanti.js', 'mrmars-cekirdek/qr.js', 'mrmars-cekirdek/kayipsiz.js', 'User Manual_en_english.html',
   'mrmars-gorseller/icon-128.png', 'mrmars-gorseller/icon-256.png', 'mrmars-gorseller/icon-512.png', 'mrmars-gorseller/logo-1024.png', 'mrmars-gorseller/logo-512.png'];
 

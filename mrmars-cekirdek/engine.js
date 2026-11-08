@@ -56,6 +56,18 @@
   }
   E.wireChain = wireChain;
 
+  // Yan zincir: seçilen parçanın sinyali, kompresörün kulağına gider
+  function connectSide(nodes, P) {
+    P.master.inserts.concat(...P.tracks.map(t => t.inserts)).forEach(d => {
+      const side = d.inst && d.inst.side; if (!side) return;
+      const want = d.extra && d.extra.source, s = want && nodes.get(want);
+      if (d._scStrip === s) return;
+      if (d._scStrip) { try { d._scStrip.fader.disconnect(side); } catch (e) { } }
+      if (s) s.fader.connect(side);
+      d._scStrip = s || null;
+    });
+  }
+
   function applyStrip(s, t, anySolo, live) {
     // canlıda otomasyon okunan parametrelere çalarken dokunulmaz (zamanlanmış rampaları bozar)
     if (!live) { s.fader.gain.value = U.dbToGain(t.vol); s.pan.pan.value = t.pan; }
@@ -117,7 +129,9 @@
         if (t.sends && t.sends[bid] <= -60) g.gain.value = 0;
       }
     });
-    if (E.master) E.master.fader.gain.value = U.dbToGain(P.master.vol);
+    if (E.master && !OS.auto.liveControlled(P.master, 'vol')) E.master.fader.gain.value = U.dbToGain(OS.auto.staticVol(P.master));
+    if (E.master && !OS.auto.liveControlled(P.master, 'pan')) E.master.pan.pan.value = OS.auto.staticPan(P.master);
+    connectSide(E.nodes, P);
   };
 
   // ---------------- Ses girişi ----------------
@@ -525,6 +539,8 @@
       });
     });
     await Promise.all(all.map(d => d.inst.ready).filter(Boolean));
+    strips.master = master;
+    all.forEach(d => { const side = d.inst && d.inst.side, s = side && d.extra && d.extra.source && strips.get(d.extra.source); if (s) s.fader.connect(side); });
     OS.auto.scheduleOffline(ctx, strips, new Map(all.map(d => [d.id, d])), from, to, b2s);
     P.tracks.forEach(t => {
       const s = strips.get(t.id);

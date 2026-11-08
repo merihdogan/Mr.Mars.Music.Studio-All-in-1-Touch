@@ -17,3 +17,10 @@ MP3 encoder
 Recorded drum samples
   File:     mrh-cihazlar/ornek-davul.js
   License:  CC0 1.0 Universal (public domain dedication) for the source recordings
+
+Recorded instrument sounds
+  Folder:   mrh-sesler/
+  Sources:  Versilian Community Sample Library, VS Chamber Orchestra Community Edition (Versilian Studios),
+            Karoryfer Samples instruments
+  License:  CC0 1.0 (public domain dedication)
+  Changes:  selected notes, shortened and encoded to MP3

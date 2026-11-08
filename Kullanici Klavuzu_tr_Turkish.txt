@@ -3,6 +3,14 @@ Taşınabilir, kurulumsuz, internetsiz müzik yapım ortamı
 Görselli kılavuz (İngilizce): üst menülerin yanındaki ❓ Kılavuz düğmesine basın veya "User Manual_en_english.pdf" dosyasını açın.
 
 M.D.26/ V.08.11. Touch İLE GELENLER
+- Gerçek kayıtlar: piyano, yaylılar, üflemeliler, gitarlar, baslar, vurmalılar, org gibi çalgılar artık gerçek
+  kayıtla çalıyor (30 paket). "Ses kaynağı" ayarı sentez sesine döndürür.
+- Kendi sesini ata: herhangi bir enstrümanda "Gerçek ses ata…" ile ses dosyaları, SFZ klasörü veya SoundFont
+  (.sf2) seçin. Ses bu cihazda o enstrümana kayıtlı kalır, bütün projelerde çalar.
+- Gerçek Perküsyon: darbuka, bendir, def, conga, bongo, cajon, tef ve daha fazlası, hepsi gerçek kayıt.
+- Gerçek Amfi Modeli: .nam dosyalarını çalar. Ağır modeller canlıda cızırdayabilir; mixdown etkilenmez.
+- Sidechain Kompresör: bu parçayı kısacak parçayı seçin. Master otomasyonu: Master panelinde.
+- MPE (MIDI ayarları) ve Ortak Proje (Araçlar menüsü, en fazla 4 kişi).
 - Dokunmatik ekran: DJ sekmesinde tam ekran Dokunmatik Kontrolcü var. Büyük jog tekerleklerinde elle
   scratch atılır (plak yüzeyi scratch, dış halka tempo itme), pedler ve faderler birden çok parmakla
   kullanılır, bütün menüler yan panelde açılır. Tüm sekmelerde kontroller dokunmatik ekranda büyür

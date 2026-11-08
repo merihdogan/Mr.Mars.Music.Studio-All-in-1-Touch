@@ -13,6 +13,9 @@
   const PAN = { name: 'Pan', min: -1, max: 1, def: 0 };
   const writing = new Map(); // lane.id -> son yazılan vuruş
   const applied = new Map(); // lane.id -> canlıda son uygulanan değer
+  // Master kanalı da otomasyonda bir parça gibidir
+  const allT = () => OS.project.tracks.concat(OS.project.master);
+  const nodeOf = t => t === OS.project.master ? E.master : E.nodes.get(t.id);
 
   // ---------------- Hedefler ----------------
   A.devices = t => [t.instrument, ...t.inserts].filter(Boolean);
@@ -67,8 +70,8 @@
   A.liveControlled = (t, target) => T.playing && !!A.readLane(t, target);
 
   A.start = function (beat, when) {
-    OS.project.tracks.forEach(t => {
-      const s = E.nodes.get(t.id); if (!s) return;
+    allT().forEach(t => {
+      const s = nodeOf(t); if (!s) return;
       ['vol', 'pan'].forEach(tg => {
         const l = A.readLane(t, tg); if (!l) return;
         const p = paramOf(s, tg);
@@ -80,8 +83,8 @@
   };
   // [a, b) aralığını zamanla: kırılma noktalarına ve (ses için) ara noktalara doğrusal rampa
   A.schedule = function (a, b) {
-    OS.project.tracks.forEach(t => {
-      const s = E.nodes.get(t.id); if (!s) return;
+    allT().forEach(t => {
+      const s = nodeOf(t); if (!s) return;
       ['vol', 'pan'].forEach(tg => {
         const l = A.readLane(t, tg); if (!l) return;
         const sp = tg === 'vol' ? VOL : PAN, p = paramOf(s, tg);
@@ -95,7 +98,7 @@
   // Cihaz parametreleri: aktarım zamanlayıcısıyla (~25 ms) güncellenir
   A.tickDevices = function () {
     const b = T.position();
-    OS.project.tracks.forEach(t => (t.automation || []).forEach(l => {
+    allT().forEach(t => (t.automation || []).forEach(l => {
       if (!l.target.startsWith('dev:') || l.read === false || l.write || !l.points.length) return;
       const s = A.spec(t, l.target); if (!s) return;
       const v = A.valueAt(l, s, b), last = applied.get(l.id);
@@ -106,15 +109,15 @@
   };
   A.stop = function () {
     writing.clear(); applied.clear();
-    OS.project.tracks.forEach(t => {
-      const s = E.nodes.get(t.id); if (!s) return;
+    allT().forEach(t => {
+      const s = nodeOf(t); if (!s) return;
       s.fader.gain.cancelScheduledValues(0); s.pan.pan.cancelScheduledValues(0);
     });
   };
   // Durdurulmuşken imleç değişince cihaz parametrelerini o konuma getir
   A.applyAtPosition = function () {
     const b = T.position();
-    OS.project.tracks.forEach(t => (t.automation || []).forEach(l => {
+    allT().forEach(t => (t.automation || []).forEach(l => {
       if (!l.target.startsWith('dev:') || l.read === false || !l.points.length) return;
       const s = A.spec(t, l.target); if (s) s.dev.setParam(s.pid, A.valueAt(l, s, b));
     }));
@@ -135,16 +138,16 @@
   };
   A.touchDevice = function (dev, pid, v) {
     if (!T.playing) return;
-    const t = OS.project.tracks.find(x => A.devices(x).includes(dev));
+    const t = allT().find(x => A.devices(x).includes(dev));
     if (t) A.touch(t, `dev:${dev.id}:${pid}`, v);
   };
 
   // ---------------- Çevrimdışı render ----------------
   A.scheduleOffline = function (ctx, strips, devById, from, to, b2s) {
     const q = 128 / ctx.sampleRate, used = new Set(), jobs = new Map();
-    OS.project.tracks.forEach(t => (t.automation || []).forEach(l => {
+    allT().forEach(t => (t.automation || []).forEach(l => {
       if (l.read === false || !l.points.length) return;
-      const st = strips.get(t.id); if (!st) return;
+      const st = t === OS.project.master ? strips.master : strips.get(t.id); if (!st) return;
       if (l.target === 'vol' || l.target === 'pan') {
         const sp = l.target === 'vol' ? VOL : PAN, p = paramOf(st, l.target);
         p.setValueAtTime(toParam(l.target, A.valueAt(l, sp, from)), 0);

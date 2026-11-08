@@ -3,6 +3,14 @@ Portable, install-free, offline music production environment
 Illustrated manual: press ❓ Manual beside the top menus, or open "User Manual_en_english.pdf".
 
 NEW IN M.D.26/ V.08.11. Touch
+- Real recordings: 30 packs of real instrument recordings (piano, strings, winds, brass, guitars, basses,
+  mallets, organ and more) replace synthesis on those instruments. "Sound source" switches back to synthesis.
+- Assign your own sound: on any library instrument press "Assign real sound…" and choose audio files, an SFZ
+  folder or a SoundFont (.sf2). Your sound is kept for that instrument across projects on this device.
+- Real Percussion: darbuka, frame drums, conga, bongo, cajon, tambourine and more, all recorded.
+- Real Amp Model: loads .nam captures. Heavy models may crackle live; mixdown is not affected.
+- Sidechain Compressor: choose the track that ducks this one. Master automation: Master panel.
+- MPE (MIDI settings) and Shared Project (Tools menu, up to 4 people).
 - Touch screens: the DJ tab has a full-screen Touch Controller: large jog wheels you can scratch with
   your hand (platter = scratch, outer ring = tempo bend), multi-finger pads and faders, every menu in a
   side sheet. All tabs get larger controls on touch screens (Tools > Touch interface).

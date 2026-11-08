@@ -226,6 +226,7 @@
     Pp.tracks.forEach(t => {
       $headers.appendChild(header(t)); $lanes.appendChild(lane(t));
       if (t.showAuto) ui.autoLanes.rows(t, W).forEach(r => { $headers.appendChild(r.head); $lanes.appendChild(r.lane); });
+      if (t === P().tracks[P().tracks.length - 1] && P().master.showAuto) ui.autoLanes.rows(P().master, W).forEach(r => { $headers.appendChild(r.head); $lanes.appendChild(r.lane); });
     });
     const filler = el('div', { style: 'height:120px' });
     filler.addEventListener('dblclick', () => A.addTrack('audio'));

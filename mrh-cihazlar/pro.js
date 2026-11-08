@@ -213,4 +213,34 @@
       };
     },
   });
+
+  // ---------------- Gerçek sidechain kompresör: başka parçanın sesi bu parçayı kısar ----------------
+  OS.plugins.register({
+    id: 'fx.sidechain', name: 'Sidechain Kompresör', type: 'effect', category: 'Dinamik',
+    params: [
+      { id: 'th', name: 'Eşik', min: -50, max: 0, def: -24, unit: 'dB' },
+      { id: 'ratio', name: 'Oran', min: 1, max: 20, def: 6 },
+      { id: 'rel', name: 'Bırakma', min: 0.02, max: 0.8, def: 0.16, unit: 's', curve: 'log' },
+      { id: 'gain', name: 'Çıkış', min: -12, max: 12, def: 0, unit: 'dB' },
+    ],
+    create(ctx) {
+      const inp = ctx.createGain(), del = ctx.createDelay(0.02), vca = ctx.createGain(), out = ctx.createGain(), side = ctx.createGain();
+      del.delayTime.value = 0.004; vca.gain.value = 1; inp.connect(del); del.connect(vca); vca.connect(out);
+      const abs = ctx.createWaveShaper(), N = 4097, c = new Float32Array(N); for (let i = 0; i < N; i++) c[i] = Math.abs(i / (N - 1) * 2 - 1); abs.curve = c;
+      const slow = ctx.createBiquadFilter(), fast = ctx.createBiquadFilter(), sg = ctx.createGain(), fg = ctx.createGain(), sum = ctx.createGain(), curve = ctx.createWaveShaper();
+      slow.type = fast.type = 'lowpass'; fast.frequency.value = 150; sg.gain.value = fg.gain.value = 0.5;
+      side.connect(abs); abs.connect(slow); abs.connect(fast); slow.connect(sg); fast.connect(fg); sg.connect(sum); fg.connect(sum); sum.connect(curve); curve.connect(vca.gain);
+      const p = { th: -24, ratio: 6, rel: 0.16 };
+      const draw = () => { const n = 2049, a = new Float32Array(n); for (let i = 0; i < n; i++) { const x = Math.abs(i / (n - 1) * 2 - 1), db = 20 * Math.log10(x + 1e-6), over = db - p.th, gr = over > 0 ? -over * (1 - 1 / p.ratio) : 0; a[i] = Math.pow(10, gr / 20) - 1; } curve.curve = a; };
+      draw();
+      const setRel = () => { slow.frequency.value = 1 / (2 * Math.PI * p.rel); };
+      setRel();
+      return { input: inp, output: out, side, set(id, v) { if (id === 'gain') out.gain.value = U.dbToGain(v); else { p[id] = v; if (id === 'rel') setRel(); else draw(); } } };
+    },
+    ui(box, dev) {
+      const el = U.el, P = OS.project; dev.extra = dev.extra || {};
+      const tracks = P.tracks.filter(t => !t.inserts.includes(dev));
+      box.appendChild(el('label', { class: 'field', style: 'margin:6px 0' }, OS.t('Tetikleyen parça'), el('select', { onchange: e => { dev.extra.source = e.target.value || null; OS.engine.updateMix(); } }, el('option', { value: '' }, OS.t('Seçilmedi')), tracks.map(t => el('option', { value: t.id, selected: t.id === dev.extra.source }, t.name)))));
+    },
+  });
 })(window.OS);

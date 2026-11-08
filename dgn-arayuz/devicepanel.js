@@ -261,7 +261,8 @@
     const P = OS.project;
     return el('div', { style: 'display:flex;flex-direction:column;gap:6px' },
       ui.insertList(P.master.inserts, { name: 'Master' }, () => { OS.engine.ensureMaster(); ui.emit('os-devices'); }),
-      U.knob({ label: 'Master', min: -60, max: 12, def: 0, value: P.master.vol, fmt: v => v.toFixed(1) + ' dB', onchange: v => { P.master.vol = v; OS.engine.updateMix(); ui.emit('os-mix'); } }));
+      U.el('button', { class: 'btn sm' + (P.master.showAuto ? ' on' : ''), title: OS.t('Master kanalının ses, pan ve efekt otomasyonu'), onclick: e => { P.master.showAuto = !P.master.showAuto; if (P.master.showAuto && !(P.master.automation || []).length) ui.autoLanes.addLane(P.master, 'vol'); e.target.classList.toggle('on', P.master.showAuto); ui.arrange.render && ui.arrange.render(); } }, OS.t('Master otomasyonu')),
+      U.knob({ label: 'Master', min: -60, max: 12, def: 0, value: P.master.vol, fmt: v => v.toFixed(1) + ' dB', onchange: v => { P.master.vol = v; OS.auto.touch(P.master, 'vol', v); OS.engine.updateMix(); ui.emit('os-mix'); } }));
   }
 
   function sec(title, body) {

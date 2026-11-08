@@ -103,6 +103,7 @@
     lang: langMenu,
     tools: () => [
       { label: 'Format Dönüştürücü…', onclick: () => OS.converter.open() },
+      { label: 'Ortak Proje…', onclick: () => OS.collab.dialog() },
       { label: 'Ses ayarları (giriş/çıkış, gecikme)…', onclick: audioSettings },
       { label: 'MIDI ayarları (Clock, controller)…', onclick: () => OS.midiClock.dialog() },
       { label: OS.t('Dokunmatik arayüz') + ': ' + OS.t({ auto: 'Otomatik', on: 'Açık', off: 'Kapalı' }[OS.platform.touchPref]), onclick: () => { const P = OS.platform, next = { auto: 'on', on: 'off', off: 'auto' }[P.touchPref]; P.setTouchPref(next); location.reload(); } },

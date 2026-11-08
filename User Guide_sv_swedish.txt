@@ -3,6 +3,9 @@ Bärbar musikproduktionsmiljö utan installation och utan internet
 Illustrerad handbok (engelska): tryck på ❓ Manual bredvid toppmenyerna eller öppna "User Manual_en_english.pdf".
 
 NYTT I M.D.26/ V.08.11. Touch
+- Riktiga inspelningar: 30 instrumentpaket; "Ljudkälla" går tillbaka till syntes. Egna ljud: "Tilldela riktigt
+  ljud…" (filer, SFZ-mapp, SoundFont). Riktig percussion, förstärkarmodeller .nam, sidechain, masterautomation,
+  MPE och delat projekt.
 - Pekskärmar: helskärms pekkontroller i DJ-fliken, stora jogghjul för scratch med handen, pads och
   fadrar med flera fingrar, alla menyer i en sidopanel (Verktyg > Pekgränssnitt).
 - Stems använder alla processorkärnor. Timecode (relativt läge). Karaoke (LRC, sångarkö).

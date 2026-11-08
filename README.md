@@ -33,6 +33,9 @@ Press **⛶ Touch Controller** in the DJ Mixer tab and the whole screen turns in
 
 | Feature | What you get |
 |---|---|
+| 🎻 **Real instruments** | Piano, strings, winds, brass, guitars, basses and mallets now play real CC0 recordings. Real percussion includes darbuka and frame drums. |
+| 🎙 **Your own sounds** | Assign audio files, an SFZ folder or a SoundFont to any instrument, so a ney or kanun can play your own recordings. |
+| 🎛 **More pro tools** | Real amp captures (.nam), true sidechain, master automation, MPE and shared projects for up to 4 people. |
 | ⚡ **Faster stems** | Vocal, drum, bass and melody separation now uses all your processor cores. A three-minute track splits in seconds while the app stays responsive. |
 | 🎛 **Timecode vinyl and CD** | Drive a deck from a real turntable or CD player with timecode media. Speed and direction are read from the stereo signal (relative mode). |
 | 🎤 **Karaoke** | Synced LRC lyrics, tap-to-time for any text, vocal level control, a singer queue and lyrics on the video output. |

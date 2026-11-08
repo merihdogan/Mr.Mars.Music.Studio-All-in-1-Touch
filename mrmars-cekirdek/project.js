@@ -27,7 +27,7 @@
     const P = OS.project;
     return {
       app: 'MrMarsStudio', yapimci: 'MRH DGN', version: 1, name: P.name, bpm: P.bpm, swing: P.swing || 0, sig: P.sig, loop: P.loop, metronome: P.metronome, zoom: P.zoom,
-      master: { vol: P.master.vol, inserts: P.master.inserts.map(d => d.serialize()) },
+      master: { vol: P.master.vol, inserts: P.master.inserts.map(d => d.serialize()), automation: P.master.automation || [], showAuto: !!P.master.showAuto },
       tracks: P.tracks.map(t => Object.assign({}, t, { inserts: t.inserts.map(d => d.serialize()), instrument: t.instrument ? t.instrument.serialize() : null })),
     };
   };
@@ -48,7 +48,7 @@
     OS.project = {
       name: data.name || 'Yeni Proje', bpm: data.bpm || 120, sig: data.sig || [4, 4],
       loop: data.loop || { on: false, start: 0, end: 16 }, metronome: !!data.metronome, zoom: data.zoom || 28, swing: data.swing || 0,
-      master: { vol: data.master ? data.master.vol : 0, inserts: ((data.master && data.master.inserts) || []).map(mk) },
+      master: { id: 'master', name: 'Master', type: 'master', pan: 0, vol: data.master ? data.master.vol : 0, inserts: ((data.master && data.master.inserts) || []).map(mk), automation: (data.master && data.master.automation) || [], showAuto: !!(data.master && data.master.showAuto) },
       tracks: (data.tracks || []).map(t => Object.assign({}, t, {
         inserts: (t.inserts || []).map(mk),
         instrument: t.instrument ? mk(t.instrument) : null,

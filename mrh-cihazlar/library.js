@@ -155,6 +155,14 @@
   M.forEach(m => { if (SAME.includes(m.name)) m.hidden = true; });
   OS.LIBRARY = M;
   // Kendi menü cihazı olan gruplar Enstrüman Kütüphanesi'nde tekrar görünmez
+  // Cihaz panelinde kendi sesini atama düğmesi
+  function realUI(box, dev) {
+    const b = U.el('button', { class: 'btn sm primary', onclick: () => { const n = dev.inst.modelName(); OS.real.dialog(n, OS.t(n)); } }, OS.t('Gerçek ses ata…'));
+    const lbl = U.el('span', { class: 'muted', style: 'margin-left:8px' });
+    const show = () => { const n = dev.inst.realInfo(); lbl.textContent = n == null ? OS.t('Sentez') : n === 'preset' ? OS.t('Hazır gerçek kayıt') : n; };
+    show(); const h = () => setTimeout(show, 60); document.addEventListener('os-real-changed', h); setTimeout(show, 900);
+    box.appendChild(U.el('div', { class: 'row', style: 'margin:6px 0' }, b, lbl));
+  }
   const OWN = ['Elektro Gitar', 'Elektro Bas', 'Perdesiz Elektro Gitar (Türk)', 'Türk Çalgıları', 'Yaylı', 'Viking'];
   // Çalgı başına makam: tüm projeyi değiştirmeden yalnız bu parçayı komalı çaldırır
   const MAKAMS = ['Rast', 'Uşşak', 'Hüseyni', 'Hicaz', 'Hicazkar', 'Nihavend', 'Kürdi', 'Saba', 'Segah', 'Hüzzam', 'Karcığar', 'Nikriz', 'Muhayyer', 'Bayati Araban', 'Hümayun'];
@@ -174,13 +182,15 @@
       { id: 'makam', name: 'Makam', type: 'choice', options: ['Genel akort'].concat(MAKAMS), min: 0, max: MAKAMS.length, def: 0 },
       { id: 'tonic', name: 'Makam tonu', type: 'choice', options: NOTES, min: 0, max: 11, def: 9 },
       { id: 'glide', name: 'Kayma (perdesiz)', min: 0, max: 0.4, def: 0.07, unit: 's' },
+      { id: 'source', name: 'Ses kaynağı', type: 'choice', options: ['Gerçek kayıt', 'Sentez'], min: 0, max: 1, def: 0 },
     ],
+    ui: realUI,
     create(ctx) {
       const out = ctx.createGain(), post = ctx.createGain(), dryG = ctx.createGain(), wetG = ctx.createGain(), conv = ctx.createConvolver();
       conv.buffer = U.makeReverbIR(ctx, 1.6, 3, 0.5);
       post.connect(dryG); post.connect(conv); conv.connect(wetG); dryG.connect(out); wetG.connect(out);
       const voiceBus = ctx.createGain();
-      const p = { model: 0, tone: 0, expr: 1, sustain: 1, transpose: 0, room: 0.15, makam: 0, tonic: 9, glide: 0.07 };
+      const p = { model: 0, tone: 0, expr: 1, sustain: 1, transpose: 0, room: 0.15, makam: 0, tonic: 9, glide: 0.07, source: 0 };
       let chain = [], mods = [], last = null;
       const pitch = nn => { const i = Math.round(p.makam) - 1, deg = i >= 0 && OS.tuning && (OS.tuning.SYSTEMS[MAKAM_SYS] || {})[MAKAMS[i]]; return deg ? OS.tuning.freqIn(nn, deg, Math.round(p.tonic)) : U.midiToFreq(nn); };
       const roomMix = () => { const v = U.clamp(p.room + (m().roomAdd || 0), 0, 1); wetG.gain.value = v * 0.6; dryG.gain.value = 1 - v * 0.3; };
@@ -194,7 +204,9 @@
         chain.forEach(n => { try { n.disconnect(); } catch (e) { } });
         chain = [];
         mods.forEach(o => { try { o.stop(); } catch (e) { } }); mods = [];
-        const md = m();
+        const orig = m(), rl = realNow();
+        // Temiz akustik kayıt model süzgeçlerinden geçmez; amfili modeller kendi zincirini korur
+        const md = rl && !rl.keep ? { name: orig.name } : orig;
         const add = n => { (chain.length ? chain[chain.length - 1] : voiceBus).connect(n); chain.push(n); return n; };
         if (md.hp) { const f = add(ctx.createBiquadFilter()); f.type = 'highpass'; f.frequency.value = md.hp; }
         const peak = ([f, g, q]) => { const b = add(ctx.createBiquadFilter()); b.type = 'peaking'; b.frequency.value = f; b.gain.value = g; b.Q.value = q; };
@@ -236,6 +248,12 @@
         (chain.length ? chain[chain.length - 1] : voiceBus).connect(post);
         ksCache.clear(); last = null; roomMix();
       }
+
+      function realNow() { return Math.round(p.source) === 0 ? OS.real.active(m().name) : null; }
+      let readyP = OS.real.prepare(m().name).then(() => buildPost());
+      const refresh = () => { readyP = OS.real.prepare(m().name).then(() => buildPost()); };
+      const onReal = e => { if (e.detail.name === m().name) refresh(); };
+      document.addEventListener('os-real-changed', onReal);
 
       function pluckBuf(f, md, vel) {
         const key = Math.round(f * 10) + ':' + p.sustain + ':' + Math.round(vel * 4);
@@ -300,9 +318,11 @@
         t = Math.max(t || 0, ctx.currentTime);
         const md = m(), v = (vel == null ? 100 : vel) / 127;
         const nn = n + 12 * (p.transpose + (md.oct || 0)), f = pitch(nn);
-        const amp = ctx.createGain(); amp.connect(voiceBus);
-        const src = [], vc = { n, amp, src, released: false, start: t, md };
-        if (md.eng === 'gtr') {
+        const amp = ctx.createGain(), press = ctx.createGain(); amp.connect(press); press.connect(voiceBus);
+        const src = [], vc = { n, amp, src, released: false, start: t, md, press };
+        const rl = realNow();
+        if (rl) OS.real.voice(ctx, rl.zones, nn, f, v, t, vc, amp, { palm: md.palm && v < 0.55, sustain: p.sustain, lvl: rl.keep ? 1.1 : 0.85 });
+        else if (md.eng === 'gtr') {
           // Perdesiz: önceki notaya bitişikse parmak kayarak gelir ve eski nota susar; akorda kayma olmaz
           let from = 0, slide = false;
           if (md.fret && last && p.glide > 0 && t - last.start > 0.04 && last.f !== f && (last.off == null || (last.off - t < 0.15 && t - last.off < 0.12))) {
@@ -401,21 +421,28 @@
         g.setTargetAtTime(0, t, Math.max(0.01, r / 4));
         vc.src.forEach(s => { try { s.stop(t + r * 1.6 + 0.05); } catch (e) { } });
       }
-      const relOf = md => md.eng === 'gtr' ? 0.1 : md.eng === 'pluck' ? 0.25 * p.sustain : md.eng === 'fm' ? (md.rel || 0.4) : md.eng === 'organ' ? 0.08 : md.rel || 0.18;
+      const relOf0 = md => md.eng === 'gtr' ? 0.1 : md.eng === 'pluck' ? 0.25 * p.sustain : md.eng === 'fm' ? (md.rel || 0.4) : md.eng === 'organ' ? 0.08 : md.rel || 0.18;
+      const relOf = md => realNow() ? (OS.real.packOf(md.name) && /fm|pluck|gtr/.test(md.eng) ? 0.3 * p.sustain : 0.16) : relOf0(md);
       buildPost();
       return {
         output: out,
+        get ready() { return readyP; },
+        modelName: () => m().name,
+        noteBend(n, c) { const t = ctx.currentTime; voices.filter(x => x.n === n && !x.released).forEach(vc => vc.src.forEach(s => { if (s.detune) s.detune.setTargetAtTime(c, t, 0.006); })); },
+        notePress(n, k) { const t = ctx.currentTime; voices.filter(x => x.n === n && !x.released).forEach(vc => vc.press.gain.setTargetAtTime(0.55 + k * 0.9, t, 0.01)); },
+        realInfo: () => { const a = realNow(); return a ? (a.user ? a.label : 'preset') : null; },
         set(id, v) {
           const prev = p[id]; p[id] = v;
           if (id === 'vol') out.gain.value = U.dbToGain(v);
           if (id === 'room') roomMix();
-          if ((id === 'model' && Math.round(prev) !== Math.round(v)) || id === 'tone') buildPost();
+          if (id === 'model' && Math.round(prev) !== Math.round(v)) refresh();
+          if (id === 'source' || (id === 'model' && Math.round(prev) !== Math.round(v)) || id === 'tone') buildPost();
           if (id === 'sustain') ksCache.clear();
         },
         noteOn,
         noteOff(n, t) { t = Math.max(t || 0, ctx.currentTime); const vc = voices.find(x => x.n === n && !x.released && x.start <= t + 0.001); if (last && last.vc === vc) last.off = t; if (vc) off(vc, t, relOf(vc.md)); },
         allOff() { voices.forEach(v => off(v, ctx.currentTime, 0.03)); last = null; },
-        dispose() { mods.forEach(o => { try { o.stop(); } catch (e) { } }); },
+        dispose() { document.removeEventListener('os-real-changed', onReal); mods.forEach(o => { try { o.stop(); } catch (e) { } }); },
       };
     },
   });
@@ -427,9 +454,11 @@
     R({
       id, name, type: 'instrument', category: 'Enstrüman',
       params: base.params.map(q => q.id === 'model' ? Object.assign({}, q, { options: idx.map(i => M[i].name), hide: idx.map((i, k) => M[i].hidden ? k : -1).filter(k => k >= 0), max: idx.length - 1, def: 0 }) : (over[q.id] != null ? Object.assign({}, q, { def: over[q.id] }) : q)),
-      create(ctx) { const i = base.create(ctx); return Object.assign({}, i, { set(k, v) { i.set(k, k === 'model' ? idx[U.clamp(Math.round(v), 0, idx.length - 1)] : v); } }); },
+      ui: realUI,
+      create(ctx) { const i = base.create(ctx), o = {}; Object.keys(i).filter(k => k !== 'ready').forEach(k => o[k] = i[k]); Object.defineProperty(o, 'ready', { get: () => i.ready, enumerable: true }); o.set = (k, v) => i.set(k, k === 'model' ? idx[U.clamp(Math.round(v), 0, idx.length - 1)] : v); return o; },
     });
   }
+  OS.real.registerPerc();
   family('inst.egtr', 'Elektro Gitarlar', 'Elektro Gitar', {});
   family('inst.fretless', 'Perdesiz Elektro Gitar (Türk)', 'Perdesiz Elektro Gitar (Türk)', { makam: 1 + MAKAMS.indexOf('Hicaz'), room: 0.2 });
   family('inst.turkish', 'Türk Çalgıları', 'Türk Çalgıları', { makam: 1 + MAKAMS.indexOf('Hicaz'), room: 0.2 });

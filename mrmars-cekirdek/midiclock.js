@@ -61,6 +61,7 @@
     const bpmLbl = el('b', null, C.extBpm ? C.extBpm + ' BPM' : '—');
     const iv = setInterval(() => { if (!bpmLbl.isConnected) clearInterval(iv); else bpmLbl.textContent = C.extBpm ? C.extBpm + ' BPM' : '—'; }, 500);
     const outOn = el('input', { type: 'checkbox', checked: C.out }), follow = el('input', { type: 'checkbox', checked: C.follow }), fT = el('input', { type: 'checkbox', checked: C.followTransport });
+    const mpeOn = el('input', { type: 'checkbox', checked: !!(OS.mpe && OS.mpe.on) });
     const srcSel = el('select', null, [['project', 'Proje aktarımı (çal / durdur ile)'], ['dj', 'Çalan DJ deck’inin temposu (sürekli)']].map(([v, l]) => el('option', { value: v, selected: v === C.outSrc }, l)));
     const body = el('div', { style: 'display:flex;flex-direction:column;gap:8px;max-width:620px' },
       el('div', { class: 'form-grid' },
@@ -70,14 +71,15 @@
         'Saat kaynağı', srcSel,
         'Harici MIDI Clock’u izle', follow,
         'Harici Start / Stop ile çal / durdur', fT,
-        'Gelen harici tempo', bpmLbl),
+        'Gelen harici tempo', bpmLbl,
+        'MPE (nota başına perde ve basınç)', mpeOn),
       el('p', { class: 'muted' }, 'MIDI Clock ile bu uygulama; DJ yazılımları, DAW’lar, drum machine ve groovebox’larla aynı tempoda çalışır. Gönderirken diğer program “harici saat / MIDI Clock slave” moduna alınmalıdır. Controller düğme ışıkları DJ Mikser’deki “LED” düğmesiyle açılır; düğme, fader ve jog eşlemeleri “MIDI Öğren” ile yapılır (14-bit fader ve pitch-bend tempo faderleri desteklenir).'));
     U.modal(OS.t('MIDI Ayarları'), body, [{ label: 'İptal' }, {
       label: 'Uygula', primary: true, onclick: () => {
         C.out = outOn.checked; C.outSrc = srcSel.value; C.follow = follow.checked; C.followTransport = fT.checked;
         const chosen = outBoxes.map(l => l.querySelector('input')).filter(i => i.checked).map(i => i.dataset.id);
         C.outIds = chosen.length === os.length ? [] : chosen;
-        C.save(); C.start();
+        C.save(); C.start(); OS.mpe.on = mpeOn.checked; OS.mpe.save();
       },
     }]);
   };
