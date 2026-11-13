@@ -27,6 +27,7 @@
     const P = OS.project;
     return {
       app: 'MrMarsStudio', yapimci: 'MRH DGN', version: 1, name: P.name, bpm: P.bpm, swing: P.swing || 0, sig: P.sig, loop: P.loop, metronome: P.metronome, zoom: P.zoom,
+      sections: (P.sections || []).map(s => Object.assign({}, s)), phrase: P.phrase || 0, showSections: P.showSections !== false,
       master: { vol: P.master.vol, inserts: P.master.inserts.map(d => d.serialize()), automation: P.master.automation || [], showAuto: !!P.master.showAuto },
       tracks: P.tracks.map(t => Object.assign({}, t, { inserts: t.inserts.map(d => d.serialize()), instrument: t.instrument ? t.instrument.serialize() : null })),
     };
@@ -48,6 +49,7 @@
     OS.project = {
       name: data.name || 'Yeni Proje', bpm: data.bpm || 120, sig: data.sig || [4, 4],
       loop: data.loop || { on: false, start: 0, end: 16 }, metronome: !!data.metronome, zoom: data.zoom || 28, swing: data.swing || 0,
+      sections: (data.sections || []).map(s => Object.assign({}, s)), phrase: data.phrase || 0, showSections: data.showSections !== false,
       master: { id: 'master', name: 'Master', type: 'master', pan: 0, vol: data.master ? data.master.vol : 0, inserts: ((data.master && data.master.inserts) || []).map(mk), automation: (data.master && data.master.automation) || [], showAuto: !!(data.master && data.master.showAuto) },
       tracks: (data.tracks || []).map(t => Object.assign({}, t, {
         inserts: (t.inserts || []).map(mk),
@@ -187,6 +189,7 @@
     async openNamed(name) {
       const s = await this.get('projects', name); if (!s) return;
       const data = JSON.parse(s); await this.loadBuffersFor(data); OS.loadProject(data); OS.history.clear();
+      const vs = OS.versions ? await OS.versions.list(name) : []; OS.project._ver = vs.length ? vs[vs.length - 1].id : null;
     },
   };
 

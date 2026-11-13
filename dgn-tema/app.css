@@ -830,3 +830,40 @@ html.touch-ui .thead input[type=range]:not(.vfader) { width: auto; flex: 1 1 60p
   .tq-master .knob .k-label { font-size: 8px; }
   .tq-rec { min-height: 36px; min-width: 36px; }
 }
+
+
+/* Upd.13.11 — bölümler şeridi ve genel bakış */
+#arr-overview { height: 30px; flex: none; position: relative; background: var(--bg2); border-bottom: 1px solid var(--line); cursor: grab; }
+#arr-overview canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; }
+#arr-sections { position: sticky; top: 0; height: 20px; background: var(--bg2); border-bottom: 1px solid var(--line); z-index: 5; cursor: copy; }
+#arr-ruler { top: 20px; }
+#arr-headers { padding-top: 47px; }
+.sec { position: absolute; top: 2px; height: 16px; border-radius: 3px; font-size: 11px; line-height: 16px; color: #fff; padding: 0 7px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; opacity: .9; box-sizing: border-box; }
+.sec:hover { opacity: 1; }
+.sec.cur { box-shadow: inset 0 0 0 1px #fff; }
+.sec.ghost { background: rgba(255,255,255,.25); pointer-events: none; }
+.sec .e { position: absolute; top: 0; bottom: 0; width: 6px; cursor: ew-resize; }
+.sec .e.l { left: 0; } .sec .e.r { right: 0; }
+html.touch-ui #arr-sections { height: 28px; } html.touch-ui .sec { height: 24px; line-height: 24px; font-size: 13px; }
+html.touch-ui #arr-ruler { top: 28px; } html.touch-ui #arr-headers { padding-top: 55px; } html.touch-ui #arr-overview { height: 40px; }
+/* stereo harita */
+.mx-mode { display: flex; flex-direction: column; gap: 4px; flex: none; }
+.smap { flex: 1; position: relative; min-width: 420px; background: var(--bg2); border: 1px solid var(--line); border-radius: 6px; }
+.smap canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; cursor: crosshair; }
+/* komut paleti */
+.palette { width: min(560px, 90vw); }
+.palette input { width: 100%; box-sizing: border-box; font-size: 15px; padding: 8px 10px; background: var(--bg); color: var(--fg); border: 1px solid var(--line); border-radius: 4px; }
+.palette .pl { max-height: 50vh; overflow-y: auto; margin-top: 6px; }
+.palette .pi { padding: 6px 10px; border-radius: 4px; cursor: pointer; display: flex; gap: 10px; }
+.palette .pi .grp { color: var(--fg3); font-size: 11px; min-width: 70px; }
+.palette .pi.on { background: var(--bg3); box-shadow: inset 2px 0 0 var(--led, #e33); }
+/* sürüm geçmişi */
+.vers { min-width: 680px; max-height: 60vh; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
+.vers .vr { display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 4px; background: var(--bg2); }
+.vers .vr.cur { box-shadow: inset 3px 0 0 var(--led, #e33); }
+.vers .vr .tm { color: var(--fg3); font-size: 11px; min-width: 112px; }
+.vers .vr .sm { flex: 1; min-width: 260px; font-size: 12px; }
+.vers .vr .btn { padding: 2px 8px; }
+.vers .vr .nt { color: var(--fg2); font-style: italic; }
+.vers .vr .br { color: var(--fg3); font-size: 11px; }
+.vers .vr .star { cursor: pointer; color: var(--fg3); } .vers .vr .star.on { color: #f5c542; }

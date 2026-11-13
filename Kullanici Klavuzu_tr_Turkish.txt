@@ -1,6 +1,23 @@
-MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · MRH DGN
+MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · Upd.13.11 · MRH DGN
 Taşınabilir, kurulumsuz, internetsiz müzik yapım ortamı
 Görselli kılavuz (İngilizce): üst menülerin yanındaki ❓ Kılavuz düğmesine basın veya "User Manual_en_english.pdf" dosyasını açın.
+
+Upd.13.11 İLE GELENLER
+- Bölümler: cetvelin üstündeki şeritte sürükleyerek Giriş, Nakarat gibi bölümler işaretleyin. Tıklamak oraya gider,
+  çift tıklamak adını değiştirir. Sağ tık: döngüye al, içeriğini seç, önceye/sonraya taşı, çoğalt ya da sil; taşıma,
+  çoğaltma ve silme bütün parçaların klipleriyle ve otomasyonuyla birlikte yapılır, şarkının akışı kendiliğinden kayar.
+  Adı boş bırakılan bölümler sırasına göre "Bölüm 1, 2…" diye kendiliğinden adlanır.
+- Genel bakış şeridi: araç çubuğunun altında şarkının tamamı küçük görünür. Çerçeveyi sürükleyerek gezinin,
+  kenarlarından yakınlaştırın, çift tıklayarak şarkıyı sığdırın. Araç çubuğunda "Sığdır" da aynı işi yapar.
+- Cümle çizgileri: araç çubuğundan her 4, 8, 16 veya 32 ölçüde bir kalın çizgi açın.
+- Sürüm geçmişi (Dosya menüsü): her kayıt (Ctrl+S) bir sürüm olur; neyin değiştiği kendiliğinden yazılır
+  ("Eklendi: Bas · Tempo 120 → 124"). Eski sürümü açın, kopya olarak açın, yıldızlayın, not ekleyin. Eski bir
+  sürümün üzerine kaydederseniz yeni bir dal açılır. Sürümler ses dosyalarını paylaşır, az yer kaplar.
+- Komut paleti (Ctrl+Shift+P): bütün menü komutları ve sekmeler tek arama kutusunda.
+- Stereo harita (Mikser > Stereo harita): her parça bir nokta; yatayda pan, dikeyde ses. Noktayı sürükleyerek ikisini
+  birden ayarlayın. Çalarken etrafındaki bulut sesin gerçekte nerede ve ne genişlikte durduğunu gösterir; altta
+  master uyumu (eksiye düşerse mono dinlemede ses kaybolur).
+- Kaydı at ve yeniden çek (Ctrl+.): kayıt sürerken çekimi geri alma adımı bırakmadan atar, aynı yerden yeniden kaydeder.
 
 M.D.26/ V.08.11. Touch İLE GELENLER
 - Gerçek kayıtlar: piyano, yaylılar, üflemeliler, gitarlar, baslar, vurmalılar, org gibi çalgılar artık gerçek

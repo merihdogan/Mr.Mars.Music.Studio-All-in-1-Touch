@@ -426,6 +426,19 @@
     document.dispatchEvent(new CustomEvent('os-transport'));
   };
 
+  /** Kaydedilmekte olan çekimi (ses ve notalar) geri alma adımı bırakmadan atar ve aynı yerden yeniden kaydeder. */
+  T.retryTake = async function () {
+    if (!T.recording) { U.toast(OS.t('Şu an kayıt yapılmıyor')); return; }
+    const start = T.recStart;
+    T.recording = false;
+    (T.recTracks || []).forEach(r => { try { r.merger.disconnect(); r.sp.disconnect(); r.silent.disconnect(); } catch (e) { } });
+    T.recTracks = []; T.recNotes = [];
+    T.stop(true);
+    T.setPosition(start);
+    U.toast(OS.t('Çekim atıldı, yeniden kaydediliyor'));
+    await T.record();
+  };
+
   function finishRecording(atBeat) {
     T.recording = false;
     const P = OS.project, sr = E.ctx.sampleRate;

@@ -1,6 +1,24 @@
-MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · MRH DGN
+MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · Upd.13.11 · MRH DGN
 Portable, install-free, offline music production environment
 Illustrated manual: press ❓ Manual beside the top menus, or open "User Manual_en_english.pdf".
+
+NEW IN Upd.13.11
+- Sections: drag in the lane above the ruler to mark parts of the song (Intro, Chorus …). Click one to jump there,
+  double-click to rename. Right-click: loop it, select its content, move it earlier or later, duplicate or delete it;
+  moving, duplicating and deleting take every track's clips and automation along and the rest of the song follows.
+  Sections left unnamed are numbered automatically, left to right.
+- Overview strip: under the toolbar, the whole song in miniature. Drag the frame to scroll, drag its edges to zoom,
+  double-click to fit the song. "Fit" on the toolbar does the same.
+- Phrase lines: from the toolbar, a heavier line every 4, 8, 16 or 32 bars.
+- Version history (File menu): every save (Ctrl+S) becomes a version described by what changed
+  ("Added: Bass · Tempo 120 → 124"). Open an old version, open it as a copy, star it, add a note. Saving on top of an
+  older version starts a new branch. Versions share their audio, so each costs little space.
+- Command palette (Ctrl+Shift+P): every menu command and tab in one search field.
+- Stereo map (Mixer > Stereo map): each track is a dot, pan across and volume up and down; drag a dot to set both.
+  While playing, the cloud around it shows where the sound really sits and how wide it is; the master correlation is
+  at the bottom (below zero, parts of the mix vanish in mono).
+- Discard and retry take (Ctrl+.): while recording, throws the take away without an undo step and records again
+  from the same place.
 
 NEW IN M.D.26/ V.08.11. Touch
 - Real recordings: 30 packs of real instrument recordings (piano, strings, winds, brass, guitars, basses,

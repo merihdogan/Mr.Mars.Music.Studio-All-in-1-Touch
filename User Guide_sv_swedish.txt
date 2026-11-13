@@ -1,6 +1,20 @@
-MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · MRH DGN
+MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · Upd.13.11 · MRH DGN
 Bärbar musikproduktionsmiljö utan installation och utan internet
 Illustrerad handbok (engelska): tryck på ❓ Manual bredvid toppmenyerna eller öppna "User Manual_en_english.pdf".
+
+NYTT I Upd.13.11
+- Avsnitt: dra i fältet ovanför linjalen för att markera låtens delar (intro, refräng …). Klicka för att hoppa dit,
+  dubbelklicka för att byta namn. Högerklick: loopa, markera innehållet, flytta tidigare/senare, duplicera eller ta bort
+  — med alla spårs klipp och automation.
+- Översiktsfält: hela låten i miniatyr under verktygsfältet. Dra för att rulla, dra kanterna för att zooma,
+  dubbelklicka för att anpassa låten.
+- Fraslinjer: en tjockare linje var 4:e, 8:e, 16:e eller 32:a takt.
+- Versionshistorik (Arkiv-menyn): varje sparning blir en version med en beskrivning av ändringen; öppna, öppna som
+  kopia, stjärnmärk, lägg till anteckning. Att spara ovanpå en äldre version startar en ny gren.
+- Kommandopalett (Ctrl+Skift+P): alla menykommandon och flikar i ett sökfält.
+- Stereokarta (Mixer > Stereokarta): varje spår är en punkt, panorering i sidled och volym i höjdled; molnet visar var
+  ljudet verkligen ligger och hur brett det är, längst ner masterns korrelation.
+- Kasta och spela in tagningen igen (Ctrl+.).
 
 NYTT I M.D.26/ V.08.11. Touch
 - Riktiga inspelningar: 30 instrumentpaket; "Ljudkälla" går tillbaka till syntes. Egna ljud: "Tilldela riktigt

@@ -18,9 +18,15 @@
     requestAnimationFrame(loop);
   };
 
+  M.mode = 'strips';
+  M.setMode = function (m) { M.mode = m; M.render(); };
   M.render = function () {
     root.innerHTML = ''; meters = [];
     const P = OS.project;
+    root.appendChild(el('div', { class: 'mx-mode' },
+      el('button', { class: 'btn sm' + (M.mode === 'strips' ? ' on' : ''), onclick: () => M.setMode('strips') }, OS.t('Şeritler')),
+      el('button', { class: 'btn sm' + (M.mode === 'map' ? ' on' : ''), title: OS.t('Her parça bir nokta: yatayda pan, dikeyde ses. Sürükleyerek ikisini birden ayarlayın.'), onclick: () => M.setMode('map') }, OS.t('Stereo harita'))));
+    if (M.mode === 'map') { ui.stereoMap.render(root); return; }
     P.tracks.forEach(t => root.appendChild(strip(t)));
     root.appendChild(strip(null));
   };

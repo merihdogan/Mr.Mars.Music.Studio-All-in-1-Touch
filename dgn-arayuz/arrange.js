@@ -8,7 +8,8 @@
   const P = () => OS.project;
   const zoom = () => P().zoom;
   const snap = (b, force) => { const s = A.snap; return s > 0 && !force ? Math.round(b / s) * s : b; };
-  const totalBeats = () => { let e = 0; P().tracks.forEach(t => t.clips.forEach(c => e = Math.max(e, c.start + c.length))); return Math.max(P().sig[0] * 64, Math.ceil(e / 4) * 4 + 64); };
+  const totalBeats = () => { let e = 0; P().tracks.forEach(t => t.clips.forEach(c => e = Math.max(e, c.start + c.length))); (P().sections || []).forEach(s => e = Math.max(e, s.end)); return Math.max(P().sig[0] * 64, Math.ceil(e / 4) * 4 + 64); };
+  A.totalBeats = totalBeats;
 
   A.init = function () {
     $headers = document.getElementById('arr-headers');
@@ -41,9 +42,15 @@
   function buildToolbar() {
     const tb = document.getElementById('arr-toolbar');
     const snapSel = el('select', { onchange: () => { A.snap = +snapSel.value; } }, SNAPS.map(([v, l]) => el('option', { value: v, selected: +v === A.snap }, l)));
+    const phraseSel = el('select', { title: OS.t('Her N ölçüde bir kalın çizgi'), onchange: () => { P().phrase = +phraseSel.value; A.render(); } },
+      [['0', OS.t('Kapalı')], ['4', '4'], ['8', '8'], ['16', '16'], ['32', '32']].map(([v, l]) => el('option', { value: v }, l)));
+    A.phraseSel = phraseSel;
     tb.append(
       el('div', { class: 'sep' }),
       el('label', null, 'Izgara', snapSel),
+      el('label', null, OS.t('Cümle çizgisi'), phraseSel),
+      el('button', { class: 'btn sm', title: OS.t('Bölüm şeridini göster/gizle'), onclick: () => { P().showSections = P().showSections === false; ui.sections.render(); } }, OS.t('Bölümler')),
+      el('button', { class: 'btn sm', title: OS.t('Şarkının tamamını sığdır'), onclick: () => ui.sections.fit() }, OS.t('Sığdır')),
       el('label', null, 'Yakınlaştır', A.zoomInp = el('input', { type: 'range', min: 4, max: 200, value: 28, oninput: e => { P().zoom = +e.target.value; A.render(); } })),
     );
   }
@@ -220,8 +227,10 @@
     const Pp = P(), z = zoom(), W = totalBeats() * z, bpb = Pp.sig[0];
     $headers.innerHTML = ''; $lanes.innerHTML = '';
     $lanes.style.width = W + 'px'; $ruler.style.width = W + 'px';
-    $lanes.style.backgroundImage = `linear-gradient(90deg, rgba(255,255,255,.10) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px)`;
-    $lanes.style.backgroundSize = `${z * bpb}px 100%, ${z}px 100%`;
+    const ph = +Pp.phrase || 0;
+    $lanes.style.backgroundImage = (ph ? 'linear-gradient(90deg, rgba(255,255,255,.26) 2px, transparent 2px), ' : '') + `linear-gradient(90deg, rgba(255,255,255,.10) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px)`;
+    $lanes.style.backgroundSize = (ph ? `${z * bpb * ph}px 100%, ` : '') + `${z * bpb}px 100%, ${z}px 100%`;
+    if (A.phraseSel) A.phraseSel.value = String(ph);
     ui.autoLanes.reset();
     Pp.tracks.forEach(t => {
       $headers.appendChild(header(t)); $lanes.appendChild(lane(t));
@@ -234,6 +243,7 @@
     $headers.appendChild(el('div', { style: 'height:140px' }));
     drawRuler();
     A.updatePlayhead(false);
+    ui.sections && ui.sections.render();
   };
 
   function header(t) {
@@ -445,6 +455,7 @@
     for (let b = first; b * barPx < sl + w; b++) {
       const x = Math.round(b * barPx - sl) + 0.5;
       if (b % every === 0) { g.beginPath(); g.moveTo(x, 10); g.lineTo(x, h); g.stroke(); g.fillText(String(b + 1), x + 3, 11); }
+      if (Pp.phrase && b % Pp.phrase === 0) { g.fillStyle = '#e8e8e8'; g.fillRect(x - 0.5, 0, 2, h); g.fillStyle = '#9aa3b2'; }
       if (barPx > 40) for (let k = 1; k < bpb; k++) { const xx = Math.round(x + k * z) + 0.5; g.beginPath(); g.moveTo(xx, 19); g.lineTo(xx, h); g.stroke(); }
     }
   }

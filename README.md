@@ -31,6 +31,16 @@ Press **⛶ Touch Controller** in the DJ Mixer tab and the whole screen turns in
 
 ## New in this version
 
+**Upd.13.11**
+- **Sections:** mark Intro, Chorus and other parts above the ruler; move, duplicate or delete a section with every track's clips and automation.
+- **Overview strip:** the whole song in miniature; drag to scroll, drag the edges to zoom, double-click to fit.
+- **Phrase lines** every 4, 8, 16 or 32 bars.
+- **Version history:** every save is a version described by what changed; open, branch, star and note versions.
+- **Command palette** (Ctrl+Shift+P): every command in one search field.
+- **Stereo map** in the Mixer: set pan and volume by dragging a dot, and see where each sound really sits and how wide it is.
+- **Discard and retry take** (Ctrl+.).
+
+
 | Feature | What you get |
 |---|---|
 | 🎻 **Real instruments** | Piano, strings, winds, brass, guitars, basses and mallets now play real CC0 recordings. Real percussion includes darbuka and frame drums. |
@@ -113,7 +123,7 @@ To run it without internet, download this repository and open `index.html`. For 
 
 ---
 
-MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch ·
+MR. MARS MUSIC STUDIO ALL IN 1 — M.D.26/ V.08.11. Touch · Upd.13.11 ·
 
 From Traditional to Universal: Limitless Performance  
 Mr.Mars Studio originally began as a dedicated tool to streamline live performances for musicians blending electric guitar and saz with DJ gear.  

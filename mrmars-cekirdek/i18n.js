@@ -64,7 +64,8 @@ window.OS = window.OS || {};
   const SKIP = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT']);
   function walk(node) {
     if (node.nodeType === 3) { const v = node.nodeValue, n = OS.t(v); if (n !== v) node.nodeValue = n; return; }
-    if (node.nodeType !== 1 || SKIP.has(node.tagName) || (node.classList && node.classList.contains('code'))) return;
+    // translate="no": kullanıcının yazdığı adlar (bölüm adı gibi) çevrilmez
+    if (node.nodeType !== 1 || SKIP.has(node.tagName) || (node.classList && node.classList.contains('code')) || (node.getAttribute && node.getAttribute('translate') === 'no')) return;
     attrs(node);
     for (let c = node.firstChild; c; c = c.nextSibling) walk(c);
   }

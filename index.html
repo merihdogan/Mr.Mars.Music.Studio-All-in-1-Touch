@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="Mr. Mars">
 <link rel="apple-touch-icon" href="mrmars-gorseller/icon-256.png">
 <script src="mrmars-cekirdek/platform.js"></script>
-<title>Mr. Mars Music Studio All in 1 M.D.26/ V.08.11. Touch</title>
+<title>Mr. Mars Music Studio All in 1 M.D.26/ V.08.11. Touch · Upd.13.11</title>
 <meta name="author" content="MRH DGN">
 <meta name="application-name" content="Mr. Mars Music Studio">
 <meta name="description" content="A full music studio in your browser: arranger, 4-deck DJ mixer, amp rack, Turkish maqams and instant QR transfer to your phone. No install, no account, no cost.">
@@ -26,10 +26,10 @@
 <link rel="stylesheet" href="dgn-tema/app.css">
 </head>
 <body>
-<div id="splash"><div class="splash-card"><img src="mrmars-gorseller/logo-512.png" alt="Mr. Mars Music Studio All in 1"><div class="splash-ver">M.D.26/ V.08.11. Touch</div><div class="splash-bar"><div></div></div><div class="splash-msg"></div></div></div>
+<div id="splash"><div class="splash-card"><img src="mrmars-gorseller/logo-512.png" alt="Mr. Mars Music Studio All in 1"><div class="splash-ver">M.D.26/ V.08.11. Touch · Upd.13.11</div><div class="splash-bar"><div></div></div><div class="splash-msg"></div></div></div>
 <div id="app">
   <header id="topbar">
-    <div class="brand" title="Mr. Mars Music Studio All in 1"><img class="brand-logo" src="mrmars-gorseller/icon-64.png" alt=""><span>Mr. Mars</span> <span class="brand-sub">Music Studio All in 1</span><span class="version-tag">M.D.26/ V.08.11. Touch</span></div>
+    <div class="brand" title="Mr. Mars Music Studio All in 1"><img class="brand-logo" src="mrmars-gorseller/icon-64.png" alt=""><span>Mr. Mars</span> <span class="brand-sub">Music Studio All in 1</span><span class="version-tag">M.D.26/ V.08.11. Touch · Upd.13.11</span></div>
     <div class="menu-row">
       <button class="btn ghost" data-menu="file">Dosya</button>
       <button class="btn ghost" data-menu="edit">Düzen</button>
@@ -71,9 +71,11 @@
   <main id="views">
     <section id="view-arrange" class="view active">
       <div id="arr-toolbar" class="toolbar"></div>
+      <div id="arr-overview" title="Genel bakış: sürükleyerek kaydır, kenarlarından yakınlaştır, çift tıkla sığdır"></div>
       <div id="arr-body">
         <div id="arr-headers"></div>
         <div id="arr-scroll">
+          <div id="arr-sections"></div>
           <div id="arr-ruler"></div>
           <div id="arr-lanes"></div>
           <div id="arr-playhead"></div>
@@ -126,12 +128,14 @@
 <script src="mrmars-cekirdek/altyapilar.js"></script>
 <script src="dgn-arayuz/devicepanel.js"></script>
 <script src="dgn-arayuz/arrange.js"></script>
+<script src="dgn-arayuz/bolumler.js"></script>
 <script src="dgn-arayuz/session.js"></script>
 <script src="dgn-arayuz/autolanes.js"></script>
 <script src="dgn-arayuz/pianoroll.js"></script>
 <script src="mrmars-cekirdek/tuning.js"></script>
 <script src="dgn-arayuz/channelrack.js"></script>
 <script src="dgn-arayuz/mixer.js"></script>
+<script src="dgn-arayuz/stereoharita.js"></script>
 <script src="dgn-arayuz/minitools.js"></script>
 <script src="dgn-arayuz/reinstrument.js"></script>
 <script src="dgn-arayuz/rig.js"></script>
@@ -163,6 +167,8 @@
 <script src="mrmars-cekirdek/telefon-baglanti.js"></script>
 <script src="mrmars-cekirdek/telefon.js"></script>
 <script src="mrmars-eklentiler/index.js"></script>
+<script src="mrmars-cekirdek/surumler.js"></script>
+<script src="dgn-arayuz/komutpaleti.js"></script>
 <script src="mrmars-cekirdek/main.js"></script>
 </body>
 </html>

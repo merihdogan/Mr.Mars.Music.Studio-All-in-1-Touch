@@ -70,7 +70,9 @@
       { label: 'Yeni proje', onclick: () => confirmLose(() => OS.newProject(false)) },
       { label: 'Demo proje', onclick: () => confirmLose(() => OS.newProject(true)) },
       '-',
-      { label: 'Projeyi kaydet (Ctrl+S)', onclick: saveNamed },
+      { label: 'Projeyi kaydet (Ctrl+S)', onclick: () => saveNamed() },
+      { label: 'Notla sürüm kaydet…', onclick: async () => { const n = await U.prompt(OS.t('Bu sürüm için kısa not'), ''); if (n != null) saveNamed(n || ' '); } },
+      { label: 'Sürüm geçmişi…', onclick: () => OS.versions.dialog() },
       { label: 'Kayıtlı proje aç…', onclick: openNamed },
       '-',
       { label: 'Proje dosyasına aktar (.mrmars)…', onclick: () => OS.exportProjectFile() },
@@ -90,6 +92,9 @@
       { label: 'İmleçte böl (S)', onclick: ui.arrange.splitAtPlayhead },
       { label: 'Sil (Del)', onclick: ui.arrange.deleteSelected },
       { label: 'Tüm klipleri seç (Ctrl+A)', onclick: selectAll },
+      '-',
+      { label: 'Kaydı at ve yeniden çek (Ctrl+.)', onclick: () => T.retryTake() },
+      { label: 'Komut paleti (Ctrl+Shift+P)', onclick: () => ui.palette.open() },
     ],
     track: () => [
       { label: 'Ses parçası ekle', onclick: () => ui.arrange.addTrack('audio') },
@@ -112,6 +117,7 @@
       ...(OS.platform.canInstall() ? [{ label: 'Ana ekrana ekle', onclick: OS.platform.install }] : []),
     ],
   };
+  ui.menus = menus;
   function wireMenus() {
     document.querySelector('.lang-btn').textContent = '🌐 ' + OS.LANG_NAMES[OS.lang];
     document.querySelectorAll('[data-menu]').forEach(b => b.onclick = () => { const r = b.getBoundingClientRect(); U.menu(r.left, r.bottom + 2, menus[b.dataset.menu]()); });
@@ -123,10 +129,11 @@
   }
   function selectAll() { ui.selectedClips.clear(); OS.project.tracks.forEach(t => t.clips.forEach(c => ui.selectedClips.add(c.id))); ui.arrange.render(); }
 
-  async function saveNamed() {
+  async function saveNamed(note) {
     const n = await U.prompt('Proje adı', OS.project.name);
     if (!n) return;
-    await OS.store.saveNamed(n); await OS.store.autosave(); U.toast('Kaydedildi: ' + n); document.title = n + ' — Mr. Mars Music Studio All in 1';
+    await OS.store.saveNamed(n); await OS.versions.record(n, typeof note === 'string' ? note.trim() : '');
+    await OS.store.autosave(); U.toast('Kaydedildi: ' + n); document.title = n + ' — Mr. Mars Music Studio All in 1';
   }
   async function openNamed() {
     const keys = await OS.store.keys('projects');
@@ -291,12 +298,13 @@
     const named = await OS.store.keys('projects');
     for (const k of named) { const s = await OS.store.get('projects', k); JSON.parse(s).tracks.forEach(t => t.clips.forEach(c => c.bufferId && used.add(c.bufferId))); }
     for (const h of OS.history.undo.concat(OS.history.redo)) JSON.parse(h).tracks.forEach(t => t.clips.forEach(c => c.bufferId && used.add(c.bufferId)));
+    (await OS.versions.bufferIds()).forEach(id => used.add(id));   // eski sürümlerin sesleri korunur
     const keys = await OS.store.keys('audio'); let n = 0;
     for (const k of keys) if (!used.has(k)) { await OS.store.del('audio', k); n++; }
     U.toast(n + ' kullanılmayan ses kaydı silindi');
   }
   function shortcutsHelp() {
-    const rows = [['Boşluk', 'Çal / Durdur'], ['R', 'Kayıt'], ['L', 'Döngü aç/kapa'], ['M', 'Metronom'], ['Home', 'Başa dön'], ['S', 'İmleçte böl'], ['Del', 'Seçili klipleri sil'], ['Ctrl+Z / Ctrl+Y', 'Geri al / Yinele'], ['Ctrl+C / V / D', 'Kopyala / Yapıştır / Çoğalt'], ['Ctrl+S', 'Kaydet'], ['Ctrl+Fare tekerleği', 'Yatay yakınlaştır'], ['Alt+Sürükle', 'Klibi kopyalayarak taşı'], ['Shift+Sürükle', 'Izgarayı yok say'], ['Cetvelde sürükle', 'Döngü bölgesi seç'], ['Piyano rulosu: Q', 'Kuantize'], ['Klavyeyle çal açıkken', 'A W S E D F T G Y H U J K: notalar, Z/X oktav, C/V velocity'], ['DJ: Boşluk / Enter', 'Deck A / Deck B çal']];
+    const rows = [['Boşluk', 'Çal / Durdur'], ['R', 'Kayıt'], ['L', 'Döngü aç/kapa'], ['M', 'Metronom'], ['Home', 'Başa dön'], ['S', 'İmleçte böl'], ['Del', 'Seçili klipleri sil'], ['Ctrl+Z / Ctrl+Y', 'Geri al / Yinele'], ['Ctrl+C / V / D', 'Kopyala / Yapıştır / Çoğalt'], ['Ctrl+S', 'Kaydet'], ['Ctrl+Shift+P', 'Komut paleti'], ['Ctrl+.', 'Kaydı at ve yeniden çek'], ['Ctrl+Fare tekerleği', 'Yatay yakınlaştır'], ['Alt+Sürükle', 'Klibi kopyalayarak taşı'], ['Shift+Sürükle', 'Izgarayı yok say'], ['Cetvelde sürükle', 'Döngü bölgesi seç'], ['Piyano rulosu: Q', 'Kuantize'], ['Klavyeyle çal açıkken', 'A W S E D F T G Y H U J K: notalar, Z/X oktav, C/V velocity'], ['DJ: Boşluk / Enter', 'Deck A / Deck B çal']];
     U.modal('Klavye Kısayolları', el('div', { class: 'form-grid' }, rows.flatMap(([a, b]) => [el('b', null, a), el('span', null, b)])));
   }
   function langMenu() {
@@ -304,7 +312,7 @@
     [...OS.LANGS].sort((a, b) => OS.LANG_NAMES[a].localeCompare(OS.LANG_NAMES[b])).forEach(c => items.push({ label: (!OS.langAuto && OS.lang === c ? '✓ ' : '') + OS.LANG_NAMES[c], onclick: () => OS.setLang(c) }));
     return items;
   }
-  ui.VERSION = 'M.D.26/ V.08.11. Touch';
+  ui.VERSION = 'M.D.26/ V.08.11. Touch · Upd.13.11';
   OS.YAPIMCI = 'MRH DGN';
   ui.openManual = () => window.open(encodeURI('User Manual_en_english.html'), '_blank');
   function about() {
@@ -336,6 +344,8 @@
       if (ui.keys.keydown(e)) { e.preventDefault(); return; }
       if (ui.view === 'dj' && ui.dj.key(e)) { e.preventDefault(); return; }
       const k = e.key.toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && k === 'p') { ui.palette.open(); e.preventDefault(); return; }
+      if ((e.ctrlKey || e.metaKey) && e.key === '.') { T.retryTake(); e.preventDefault(); return; }
       if (e.ctrlKey || e.metaKey) {
         if (k === 'z' && !e.shiftKey) { OS.history.doUndo(); e.preventDefault(); }
         else if (k === 'y' || (k === 'z' && e.shiftKey)) { OS.history.doRedo(); e.preventDefault(); }
@@ -391,7 +401,7 @@
   async function boot() {
     E.init();
     splash('Arayüz hazırlanıyor…', 0.2);
-    ui.arrange.init(); ui.channelRack.init(); ui.mixer.init(); ui.miniTools.init(); ui.reinstrument.init(); ui.session.init(); ui.world.init(); ui.metal.init(); ui.rig.init(); ui.dj.init(); ui.plugins.init(); ui.keys.init();
+    ui.arrange.init(); ui.sections.init(); ui.channelRack.init(); ui.mixer.init(); ui.miniTools.init(); ui.reinstrument.init(); ui.session.init(); ui.world.init(); ui.metal.init(); ui.rig.init(); ui.dj.init(); ui.plugins.init(); ui.keys.init();
     wireTransport(); wireMenus(); keys();
     $('lz-close').onclick = ui.closeLower;
     document.addEventListener('os-project', () => { ui.updateTransportUI(); if (!OS.project.tracks.find(t => t.id === ui.selectedTrack)) ui.selectedTrack = null; ui.renderInspector(); OS.store.markDirty(); });
